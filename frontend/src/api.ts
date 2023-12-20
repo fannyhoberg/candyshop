@@ -6,14 +6,11 @@ export const fetchProducts = async () => {
     throw new Error(
       `Could not fetch todos. Status code was ${response.status}`
     );
+  } else {
+    console.log(response.json);
   }
-
-  //   else {
-  //     console.log(response.json);
-  //   }
 
   const data: Product[] = await response.json();
 
   return data;
-  // console.log(data);
 };
