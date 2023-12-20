@@ -22,9 +22,9 @@ const getAndRenderProducts = async () => {
     const productArray: [] = products.data;
     console.log(productArray);
 
-    productArray.forEach((item) => {
-      console.log(item.name);
-    })
+    // productArray.forEach((item) => {
+    //   console.log(item.name);
+    // })
 
     // Render todos
     renderProducts(productArray);
@@ -44,7 +44,7 @@ const renderProducts = (array) => {
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" id="">
       <h2 id="candy-name">${product.name}</h2>
       <p id="candy-price">${product.price} kronor</p>
-      <button id="add-to-card">Köp</button>
+      <button id="add-to-cart">Köp</button>
       </div>
   `)
     .join("");
