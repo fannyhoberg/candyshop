@@ -2,7 +2,7 @@ import { fetchProducts } from "./api";
 import { Product } from "./types";
 
 import "./style.css";
-import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap/dist/css/bootstrap.css";
 
 const container = document.querySelector<HTMLElement>(".container")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
@@ -43,7 +43,7 @@ const renderProducts = (array: Product[]) => {
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" id="">
       <h2 id="candy-name">${product.name}</h2>
       <p id="candy-price">${product.price} kronor</p>
-      <button id="add-to-cart">Köp</button>
+      <button id="add-to-cart" class="button">Köp</button>
       </div>
   `
     )
