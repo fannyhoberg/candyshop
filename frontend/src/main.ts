@@ -1,4 +1,5 @@
 import './style.css'
+import 'bootstrap/dist/css/bootstrap.css'
 
 export const fetchProducts = async () => {
   const response = await fetch("https://www.bortakvall.se/api/v2/products");
