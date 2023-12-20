@@ -1,5 +1,14 @@
-// export interface Product {
-//     name: string
-//     id: number
-//     price: number
-// }
+export interface Product {
+  description: string;
+  id: number;
+  images: { thumbnail: string; large: string };
+  name: string;
+  on_sale: boolean;
+  price: number;
+  stock_quantity: number;
+  stock_status: string;
+  tags: [
+    { id: number; name: string; slug: string },
+    { id: number; name: string; slug: string }
+  ];
+}
