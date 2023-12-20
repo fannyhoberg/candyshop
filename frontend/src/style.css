@@ -108,8 +108,10 @@ nav {
 }
 
 .product-card {
-  padding: 20px;
+  margin: 20px;
+  padding: 15px;
   width: 100%;
+  background-color: rgb(219, 149, 237, 0.24);
 }
 
 .product-card img {
