@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 const container = document.querySelector<HTMLElement>(".container")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
-let products: Product[] = [];
+//let products: Product[] = [];
 
 /**
  *  Get products from server (through fetchProducts), update local copy and render todos
@@ -15,17 +15,17 @@ let products: Product[] = [];
 const getAndRenderProducts = async () => {
   try {
     // Fetch products from server and updates local copy
-    products = await fetchProducts();
+    const products: Product[] = await fetchProducts();
 
     console.log("These are our products", products);
-    console.log(typeof products);
+    //console.log(typeof products);
 
     const productArray: [] = products.data;
     console.log("product array: ", productArray);
 
     // productArray.forEach((item) => {
     //   console.log(item.name);
-    // })
+    // });
 
     //Render products
     renderProducts(productArray);
