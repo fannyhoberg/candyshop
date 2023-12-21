@@ -42,9 +42,11 @@ const renderProducts = (array: Product[]) => {
       (product) => `
       <div class="product-card">
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" id="">
+      <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
       <p id="candy-price">${product.price} kronor</p>
       <button id="add-to-cart" class="button">Lägg i varukorg</button>
+      </div>
       </div>
   `
     )
