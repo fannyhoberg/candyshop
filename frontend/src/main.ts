@@ -7,6 +7,7 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>(".container")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
+// declare variable to store value returned from fetch function
 let products: ProductObject;
 
 /**
@@ -18,8 +19,8 @@ const getAndRenderProducts = async () => {
     products = await fetchProducts();
 
     console.log("These are our products", products);
-    //console.log(typeof products);
 
+    // create array from "data" keyword (on ProducObject)
     const productArray: Product[] = products.data;
     console.log("product array: ", productArray);
 
@@ -34,7 +35,7 @@ const getAndRenderProducts = async () => {
   }
 };
 
-// Render todos to DOM
+// Render products to DOM
 const renderProducts = (array: Product[]) => {
   container.innerHTML = array
     .map(
