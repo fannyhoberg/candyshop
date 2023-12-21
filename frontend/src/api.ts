@@ -1,4 +1,4 @@
-import { Product } from "./types";
+import { ProductObject } from "./types";
 
 export const fetchProducts = async () => {
   const response = await fetch("https://www.bortakvall.se/api/v2/products");
@@ -10,7 +10,7 @@ export const fetchProducts = async () => {
     console.log(response.json);
   }
 
-  const data: Product[] = await response.json();
+  const data: ProductObject = await response.json();
 
   return data;
 };

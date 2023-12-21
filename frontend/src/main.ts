@@ -1,5 +1,5 @@
 import { fetchProducts } from "./api";
-import { Product } from "./types";
+import { Product, ProductObject } from "./types";
 
 import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
@@ -7,7 +7,7 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>(".container")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
-let products: Product[] = [];
+let products: ProductObject;
 
 /**
  *  Get products from server (through fetchProducts), update local copy and render todos
@@ -20,7 +20,7 @@ const getAndRenderProducts = async () => {
     console.log("These are our products", products);
     //console.log(typeof products);
 
-    const productArray: [] = products.data;
+    const productArray: Product[] = products.data;
     console.log("product array: ", productArray);
 
     // productArray.forEach((item) => {

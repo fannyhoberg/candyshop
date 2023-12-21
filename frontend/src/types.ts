@@ -1,3 +1,8 @@
+export interface ProductObject {
+  status: string;
+  data: Product[];
+}
+
 export interface Product {
   description: string;
   id: number;
