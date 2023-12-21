@@ -7,7 +7,7 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>(".container")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
-//let products: Product[] = [];
+let products: Product[] = [];
 
 /**
  *  Get products from server (through fetchProducts), update local copy and render todos
@@ -15,7 +15,7 @@ const container = document.querySelector<HTMLElement>(".container")!;
 const getAndRenderProducts = async () => {
   try {
     // Fetch products from server and updates local copy
-    const products: Product[] = await fetchProducts();
+    products = await fetchProducts();
 
     console.log("These are our products", products);
     //console.log(typeof products);
