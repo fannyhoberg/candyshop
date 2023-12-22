@@ -10,6 +10,8 @@
 </head>
 
 <body>
+
+  <!-- HEADER -->
   <header>
     <nav>
       <span class="icon-element nav-logo">Bortakväll</span>
@@ -24,26 +26,28 @@
     </div>
 
     <div id="header-blend-layer"></div>
-
   </header>
 
+  <!-- CART -->
   <div id="cart-wrapper" class="hide">
     <div id="cart-nav">
-      <span class="icon-element nav-logo">Bortakväll</span>
+      <span class="icon-element nav-logo">Varukorg</span>
       <span id="close-cart" class="icon-element fa-solid fa-xmark"></span>
     </div>
     <div id="cart">
 
+      <!-- CART <ul> ELEMENT -->
       <ul id="cart-list">
 
+        <!-- CART <li> ELEMENT -->
         <li class="list-item">
           <div class="list-item-content">
             <img class="cart-thumbnail" src="https://www.bortakvall.se/storage/products/thumbnails/1997509-300x300.png"
               alt="Product thumbnail">
             <div class="list-text-content">
               <p class="cart-item-title">Gott & Blandat Giants</p>
-              <p class="cart-item-price">12 kronor</p>
               <p class="cart-item-price">Antal: <span>2</span></p>
+              <p class="cart-item-price">24 kronor</p>
             </div>
           </div>
           <button class="remove-item"><span class="fa-solid fa-xmark"></span></button>
@@ -55,8 +59,8 @@
               alt="Product thumbnail">
             <div class="list-text-content">
               <p class="cart-item-title">Banana Bubs</p>
-              <p class="cart-item-price">12 kronor</p>
               <p class="cart-item-price">Antal: <span>1</span></p>
+              <p class="cart-item-price">12 kronor</p>
             </div>
           </div>
           <button class="remove-item"><span class="fa-solid fa-xmark"></span></button>
@@ -64,6 +68,7 @@
 
       </ul>
 
+      <!-- CART TOTAL -->
       <div id="cart-total-wrap">
         <div class="cart-total-price">
           <p>Totalt</p>
@@ -77,12 +82,12 @@
     </div>
   </div>
 
-
+  <!-- PRODUCT INFO POPUP -->
   <div class="product-info-wrap hide">
     <div class="product-info-container">
       <div id="close-product"><span class="icon-element fa-solid fa-xmark"></span></div>
       <img src="https://www.bortakvall.se/storage/products/thumbnails/1997509-300x300.png" alt="Product thumbnail"
-        id="">
+        class="product-image-large">
       <div class="product-card-content">
         <h2 id="candy-name">Title</h2>
         <p id="candy-description">Description</p>
@@ -90,9 +95,14 @@
     </div>
   </div>
 
+  <div class="container">
+    <p>Showing <span id="product-count"></span> products</p>
+  </div>
+
+  <!-- PRODUCT SECTION CONTAINER -->
   <section class="container" id="product-container">
     <!-- <div class="product-card">
-      <img src="https://peachyhanna.com/resources/images/Freshly_Cut_FlowersSmall.png" alt="Product thumbnail" id="">
+      <img src="https://peachyhanna.com/resources/images/Freshly_Cut_FlowersSmall.png" alt="Product thumbnail" class="product-image-thumbnail">
       <div class="product-card-content">
         <h2 id="candy-name">Titel</h2>
         <p id="candy-price">Pris</p>
