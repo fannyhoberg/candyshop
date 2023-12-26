@@ -10,6 +10,7 @@ const productOverviewCount = document.querySelector<HTMLSpanElement>("#product-c
 
 // declare variable to store value returned from fetch function
 let products: ProductObject;
+let productArray: Product[] = [];
 
 /**
  *  Get products from server (through fetchProducts), update local copy and render todos
@@ -22,7 +23,7 @@ const getAndRenderProducts = async () => {
     console.log("These are our products", products);
 
     // create array from "data" keyword (on ProducObject)
-    const productArray: Product[] = products.data;
+    productArray = products.data;
     console.log("product array: ", productArray);
 
     // productArray.forEach((item) => {
