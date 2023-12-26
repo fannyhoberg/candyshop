@@ -5,7 +5,8 @@ import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
-const productOverviewCount = document.querySelector<HTMLSpanElement>("#product-count")!;
+const productOverviewCount =
+  document.querySelector<HTMLSpanElement>("#product-count")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
 // declare variable to store value returned from fetch function
@@ -33,8 +34,6 @@ const getAndRenderProducts = async () => {
     //Render products
     renderProducts(productArray);
     productOverviewCount.innerHTML = `${productArray.length}`;
-
-
   } catch (err) {
     alert("Could not get todos, try again later?");
   }
@@ -45,7 +44,7 @@ const renderProducts = (array: Product[]) => {
   container.innerHTML = array
     .map(
       (product) => `
-      <div class="product-card">
+      <div class="product-card" data-product-id="${product.id}>
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail">
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
