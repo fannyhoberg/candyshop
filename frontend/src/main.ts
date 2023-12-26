@@ -1,8 +1,10 @@
 import { fetchProducts } from "./api";
 import { Product, ProductObject } from "./types";
-
+//import { handleProductClick } from "./product-info-popup";
 import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
+
+export { productArray };
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
@@ -44,7 +46,7 @@ const renderProducts = (array: Product[]) => {
   container.innerHTML = array
     .map(
       (product) => `
-      <div class="product-card" data-product-id="${product.id}>
+      <div class="product-card" data-product-id="${product.id}" >
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail">
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
@@ -55,6 +57,7 @@ const renderProducts = (array: Product[]) => {
   `
     )
     .join("");
+  //productCard.addEventListener("click", handleProductClick);
 };
 
 getAndRenderProducts();
