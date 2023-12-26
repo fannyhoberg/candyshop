@@ -34,7 +34,12 @@
       <span class="icon-element nav-logo">Varukorg</span>
       <span id="close-cart" class="icon-element fa-solid fa-xmark"></span>
     </div>
-    <div id="cart">
+
+    <div id="cart-default" class="">
+      <p>Din varukorg är tom!</p>
+    </div>
+
+    <div id="cart" class="hide">
 
       <!-- CART <ul> ELEMENT -->
       <ul id="cart-list">
@@ -124,15 +129,15 @@
 
       <div class="form-field">
         <label for="phone">Telefon</label><br>
-        <input type="number" id="phone" name="phone"><br>
+        <input type="tel" id="phone" name="phone"><br>
       </div>
 
       <div class="form-field">
         <label for="email">E-mail*</label><br>
-        <input type="number" id="email" name="email" required><br>
+        <input type="email" id="email" name="email" required><br>
       </div>
 
-      <input type="submit" value="Beställ">
+      <input type="submit" value="Beställ" class="button">
     </form>
   </div>
 

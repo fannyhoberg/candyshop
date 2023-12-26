@@ -68,6 +68,7 @@ button {
   padding: 0 25px;
   border-radius: 10px;
   border: 1px solid #FEC3FF;
+  cursor: pointer;
 }
 
 img {
@@ -165,6 +166,15 @@ nav span.icon-element,
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #84A59D;
+}
+
+#cart-default {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #cart {
