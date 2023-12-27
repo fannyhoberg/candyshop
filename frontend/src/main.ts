@@ -61,3 +61,51 @@ const renderProducts = (array: Product[]) => {
 };
 
 getAndRenderProducts();
+
+let totalAmount = 0;
+
+const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
+
+// Eventlistener for container with candies, listening for clicks on button
+container.addEventListener("click", (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  // check if click was on button
+  if (target.tagName === "BUTTON") {
+    // get and store product-id
+    // let product_id = target.dataset.id;
+  }
+
+  // call function addToCart and send clicked products id
+  // addToCart(product_id);
+
+  // count total amount of clicks on button and display by shopping cart
+  totalAmount++;
+  if (totalAmount > 0) {
+    totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
+  }
+
+  // Need to save data to Local Storage with every click on button
+});
+
+const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
+
+const openCartEl = document.querySelector<HTMLElement>("#open-cart")!;
+
+// Eventlistener for click on shopping cart, click will open cart
+openCartEl.addEventListener("click", (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  // check if click was on button
+  if (target.classList.contains("fa-cart-shopping")) {
+    cartWrapperEl.classList.remove("hide");
+  }
+});
+
+// Eventlistener to close cart
+const closeCartEl = document.querySelector<HTMLElement>("#close-cart")!;
+
+closeCartEl.addEventListener("click", (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  if (target.classList.contains("fa-xmark")) {
+    cartWrapperEl.classList.add("hide");
+  }
+});
