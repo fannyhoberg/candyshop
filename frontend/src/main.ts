@@ -73,16 +73,16 @@ container.addEventListener("click", (e: MouseEvent) => {
   if (target.tagName === "BUTTON") {
     // get and store product-id
     // let product_id = target.dataset.id;
+
+    // count total amount of clicks on button and display by shopping cart
+    totalAmount++;
+    if (totalAmount > 0) {
+      totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
+    }
   }
 
   // call function addToCart and send clicked products id
   // addToCart(product_id);
-
-  // count total amount of clicks on button and display by shopping cart
-  totalAmount++;
-  if (totalAmount > 0) {
-    totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
-  }
 
   // Need to save data to Local Storage with every click on button
 });
