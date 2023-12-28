@@ -1,15 +1,27 @@
 import { fetchProducts } from "./api";
 import { Product, ProductObject } from "./types";
-//import { handleProductClick } from "./product-info-popup";
+import { displayProductPopup, closePopup } from "./product-info-popup";
 import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
-
-export { productArray };
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
+
+// declare variables for info popup
+
+const productInfoWrap =
+  document.querySelector<HTMLElement>(".product-info-wrap")!;
+const largeImage = document.querySelector<HTMLImageElement>(
+  ".product-image-large"
+)!;
+const candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
+const candyDescription =
+  document.querySelector<HTMLParagraphElement>("#candy-description")!;
+const productInfoContainer = document.querySelector<HTMLElement>(
+  ".product-info-container"
+)!;
 
 // declare variable to store value returned from fetch function
 let products: ProductObject;
@@ -57,7 +69,46 @@ const renderProducts = (array: Product[]) => {
   `
     )
     .join("");
-  //productCard.addEventListener("click", handleProductClick);
+
+  // get a reference to all product cards on page and add eventlistener to each product card
+
+  const productCards = document.querySelectorAll(
+    ".product-card"
+  ) as NodeListOf<HTMLElement>;
+  productCards.forEach((productCard) => {
+    productCard.addEventListener("click", handleProductClick);
+  });
 };
+
+const handleProductClick = (e: MouseEvent) => {
+  console.log("Handle Product Click triggered");
+  const clickedElement = e.target as HTMLElement;
+
+  // Check if the clicked element is the product card image
+  if (clickedElement.classList.contains("product-image-thumbnail")) {
+    // Retrieve the product ID from the data attribute
+    const productId = (clickedElement.closest(".product-card") as HTMLElement)
+      ?.dataset.productId;
+
+    // Call a function to display a pop-up or perform any other action
+    // only run if productId is not undefined
+
+    if (productId !== undefined) {
+      displayProductPopup(
+        productId,
+        productArray,
+        productInfoWrap,
+        candyName,
+        candyDescription,
+        largeImage
+      );
+    }
+
+    console.log("You clicked the product card image with ID:", productId);
+  }
+};
+
+// call the close popup function
+closePopup(productInfoContainer, productInfoWrap);
 
 getAndRenderProducts();
