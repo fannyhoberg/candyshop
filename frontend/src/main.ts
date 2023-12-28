@@ -1,6 +1,7 @@
 import { fetchProducts } from "./api";
 import { Product, ProductObject } from "./types";
 import { displayProductPopup, closePopup } from "./product-info-popup";
+import "./submit-order";
 import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
 

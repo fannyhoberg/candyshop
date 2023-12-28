@@ -29,7 +29,10 @@ export const submitOrder = async (newOrder: NewOrder) => {
   });
 
   // Check that everything went ok
-  if (!res.ok) {
+  if (res.ok) {
+    console.log("Order submitted: ", res)
+
+  } else if (!res.ok) {
     alert("Could not submit order!");
     console.log("Could not submit order:", res);
     return;
