@@ -1,4 +1,4 @@
-import { ProductObject } from "./types";
+import { NewOrder, ProductObject } from "./types";
 
 // fetch the data from api
 
@@ -16,4 +16,22 @@ export const fetchProducts = async () => {
   const data: ProductObject = await response.json();
 
   return data;
+};
+
+
+export const submitOrder = async (newOrder: NewOrder) => {
+  const res = await fetch("https://www.bortakvall.se/api/v2/users/32/orders", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newOrder),
+  });
+
+  // Check that everything went ok
+  if (!res.ok) {
+    alert("Could not submit order!");
+    console.log("Could not submit order:", res);
+    return;
+  }
 };

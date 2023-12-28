@@ -4,6 +4,9 @@ import { Product, ProductObject } from "./types";
 import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
 
+// import { submitOrder } from "./api";
+// import { NewOrder } from "./types";
+
 export { productArray };
 
 const container = document.querySelector<HTMLElement>("#product-container")!;

@@ -17,3 +17,27 @@ export interface Product {
     { id: number; name: string; slug: string }
   ];
 }
+
+// export interface NewOrder {
+//   name: string;
+//   address: string;
+//   zipcode: string;
+//   city: string;
+//   phone: string;
+//   email: string;
+// }
+
+export interface NewOrder {
+  data: {
+    customer_first_name: string,
+    customer_last_name: string,
+    customer_address: string,
+    customer_postcode: string,
+    customer_city: string,
+    customer_email: string,
+    customer_phone: string,
+    order_total: number,
+    order_items: [{}],
+  }
+}
+
