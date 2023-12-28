@@ -28,7 +28,6 @@ container.addEventListener("click", (e: MouseEvent) => {
       // Check that candyNameElement is not null
       if (candyNameElement) {
         candyNameToCart = candyNameElement.textContent || "";
-        console.log("Detta är candyname:", candyNameToCart);
       }
     }
     console.log("Detta är candyname:", candyNameToCart);
@@ -43,8 +42,6 @@ container.addEventListener("click", (e: MouseEvent) => {
       // Kontrollera att candyImageElement inte är null innan du fortsätter
       if (candyImageElement) {
         candyImageSrc = candyImageElement.getAttribute("src") || "";
-
-        console.log("Detta är candyImageSrc:", candyImageSrc);
       }
     }
     console.log("Detta är candyImageSrc:", candyImageSrc);
@@ -60,7 +57,6 @@ container.addEventListener("click", (e: MouseEvent) => {
       // Check that candyNameElement is not null
       if (candyPriceElement) {
         candyPriceToCart = candyPriceElement.textContent || "";
-        console.log("Detta är candyPriceToCart:", candyPriceToCart);
       }
     }
     console.log("Detta är candyPriceToCart:", candyPriceToCart);
@@ -91,9 +87,6 @@ const addToCart = (
   candyImageSrc: string,
   candyPriceToCart: string
 ) => {
-  console.log("Detta är candyname i addTocart:", candyNameToCart);
-  console.log("Detta är product_id i addTocart:", product_id);
-
   let productInCart = carts.findIndex((value) => value.id == product_id);
   // checks if cart is empty, then fill cart with info
   if (carts.length <= 0) {
@@ -122,9 +115,10 @@ const addToCart = (
   }
   //call function to render to cart
   addToCartRender();
-  console.log("detta är cartlist : ", cartEl);
+  console.log("detta är carts : ", carts);
 };
 
+const totalCostEl = document.querySelector<HTMLElement>("#totalCost")!;
 // render products to shoppingcart
 const addToCartRender = () => {
   cartlistEL.innerHTML = ``;
@@ -137,10 +131,14 @@ const addToCartRender = () => {
       cartDefaultEl.classList.add("hide");
     }
 
+    let totalCost = 0;
+
     carts.forEach((cart) => {
-      console.log("detta är carts i for each: ", carts);
       let newItemInCart = document.createElement("li");
       let priceProduct = cart.price * cart.stock_quantity;
+
+      totalCost += priceProduct;
+
       newItemInCart.classList.add("list-item");
       newItemInCart.innerHTML = `
       <div class="list-item-content">
@@ -159,6 +157,7 @@ const addToCartRender = () => {
         <span class="fa-solid fa-xmark"></span>
       </button>
 `;
+      totalCostEl.innerHTML = `${totalCost} kr`;
       cartlistEL.appendChild(newItemInCart);
     });
   }
