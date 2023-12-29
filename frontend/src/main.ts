@@ -332,6 +332,26 @@ const addToCartRender = () => {
       totalCostEl.innerHTML = `${totalCost} kr`;
       cartlistEL.appendChild(newItemInCart);
     });
+
+    // go to checkout from cart
+
+    // reference to total cart div
+    // add event listener to div and target "till kassan" button
+    // only works if text is clicked atm!
+
+    const goToCheckout =
+      document.querySelector<HTMLElement>("#cart-total-wrap")!;
+    //reference to checkout
+    const checkout = document.querySelector<HTMLElement>(
+      "#checkout-container"
+    )!;
+
+    goToCheckout?.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).tagName === "P") {
+        console.log("you want to go to checkout!");
+        checkout.classList.remove("hide");
+      }
+    });
   }
   const json = JSON.stringify(carts);
   localStorage.setItem("carts", json);
