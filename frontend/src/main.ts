@@ -1,5 +1,5 @@
 import { fetchProducts } from "./api";
-import { Product, ProductObject } from "./types";
+import { Product, ProductObject, CartItem } from "./types";
 import { displayProductPopup, closePopup } from "./product-info-popup";
 import "./style.css";
 // import "bootstrap/dist/css/bootstrap.css";
@@ -59,11 +59,11 @@ const renderProducts = (array: Product[]) => {
     .map(
       (product) => `
       <div class="product-card" data-product-id="${product.id}" >
-      <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail">
+      <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail" id="candy-image">
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
-      <p id="candy-price">${product.price} kronor</p>
-      <button id="add-to-cart" class="button">Lägg i varukorg</button>
+      <p id="candy-price">${product.price}</p> kronor
+      <button id="add-to-cart" class="button" data-id="${product.id}">Lägg i varukorg</button>
       </div>
       </div>
   `
@@ -111,7 +111,7 @@ const handleProductClick = (e: MouseEvent) => {
 // call the close popup function
 closePopup(productInfoContainer, productInfoWrap);
 
-getAndRenderProducts();
+// FANNYS KOD NEDAN
 
 let totalAmount = 0;
 
@@ -122,21 +122,168 @@ container.addEventListener("click", (e: MouseEvent) => {
   const target = e.target as HTMLElement;
   // check if click was on button
   if (target.tagName === "BUTTON") {
-    // get and store product-id
-    // let product_id = target.dataset.id;
+    console.log("Du klickade på knappen", e);
 
-    // count total amount of clicks on button and display by shopping cart
+    // get and store product-id
+    let product_id = Number(target.dataset.id);
+    console.log("Detta är product_id", product_id);
+
+    // get reference for closest product card
+    const parentProductEl = target.closest(".product-card") as HTMLElement;
+    console.log("Detta är parentProductEl; ", parentProductEl);
+
+    // get reference for clicked candy name
+    let candyNameToCart: string = "";
+
+    if (parentProductEl) {
+      const candyNameElement = parentProductEl.querySelector(
+        "#candy-name"
+      ) as HTMLHeadingElement;
+
+      // Check that candyNameElement is not null
+      if (candyNameElement) {
+        candyNameToCart = candyNameElement.textContent || "";
+      }
+    }
+    console.log("Detta är candyname:", candyNameToCart);
+
+    // get reference for clicked candy image source
+    let candyImageSrc: string = "";
+    if (parentProductEl) {
+      const candyImageElement = parentProductEl.querySelector(
+        "#candy-image"
+      ) as HTMLImageElement;
+
+      // Kontrollera att candyImageElement inte är null innan du fortsätter
+      if (candyImageElement) {
+        candyImageSrc = candyImageElement.getAttribute("src") || "";
+      }
+    }
+    console.log("Detta är candyImageSrc:", candyImageSrc);
+
+    // get reference for clicked candy price
+    let candyPriceToCart: string = "";
+
+    if (parentProductEl) {
+      const candyPriceElement = parentProductEl.querySelector(
+        "#candy-price"
+      ) as HTMLElement;
+
+      // Check that candyNameElement is not null
+      if (candyPriceElement) {
+        candyPriceToCart = candyPriceElement.textContent || "";
+      }
+    }
+    console.log("Detta är candyPriceToCart:", candyPriceToCart);
+
+    // call function addToCart with value of clicked candy
+    addToCart(
+      product_id,
+      candyNameToCart,
+      candyImageSrc,
+      Number(candyPriceToCart)
+    );
+
+    // count for clicks and display next to cart
     totalAmount++;
     if (totalAmount > 0) {
       totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
     }
   }
 
-  // call function addToCart and send clicked products id
-  // addToCart(product_id);
-
   // Need to save data to Local Storage with every click on button
 });
+
+// empty cart array
+let carts: CartItem[] = [];
+
+const cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
+const cartEl = document.querySelector<HTMLElement>("#cart")!;
+
+// function to add product to cart array and update quantity
+const addToCart = (
+  product_id: number,
+  candyNameToCart: string,
+  candyImageSrc: {
+    thumbnail: string;
+  },
+  candyPriceToCart: number
+) => {
+  let productInCart = carts.findIndex((value) => value.id == product_id);
+  // checks if cart is empty, then fill cart with info
+  if (carts.length <= 0) {
+    carts = [
+      {
+        price: candyPriceToCart,
+        images: candyImageSrc,
+        name: candyNameToCart,
+        id: product_id,
+        stock_quantity: 1,
+      },
+    ];
+    // checks if productInCart does not exists in cart, then push to cart
+  } else if (productInCart < 0) {
+    carts.push({
+      price: candyPriceToCart,
+      images: candyImageSrc,
+      name: candyNameToCart,
+      id: product_id,
+      stock_quantity: 1,
+    });
+    // if productInCart already is in cart, then only increase quantity by 1
+  } else {
+    carts[productInCart].stock_quantity =
+      carts[productInCart].stock_quantity + 1;
+  }
+  //call function to render to cart
+  addToCartRender();
+  console.log("detta är carts : ", carts);
+};
+
+const totalCostEl = document.querySelector<HTMLElement>("#totalCost")!;
+// render products to shoppingcart
+const addToCartRender = () => {
+  cartlistEL.innerHTML = ``;
+
+  if (carts.length > 0) {
+    cartEl.classList.remove("hide");
+
+    const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
+    if (cartDefaultEl.classList.contains("empty-cart")) {
+      cartDefaultEl.classList.add("hide");
+    }
+
+    let totalCost = 0;
+
+    carts.forEach((cart) => {
+      let newItemInCart = document.createElement("li");
+      let priceProduct = cart.price * cart.stock_quantity;
+
+      totalCost += priceProduct;
+
+      newItemInCart.classList.add("list-item");
+      newItemInCart.innerHTML = `
+      <div class="list-item-content">
+        <img
+          class="cart-thumbnail"
+          src="${cart.images}"
+          alt="Product thumbnail"
+        />
+        <div class="list-text-content">
+          <p class="cart-item-title">${cart.name}</p>
+          <p class="cart-item-price">Antal: ${cart.stock_quantity} st</p>
+          <p class="cart-item-price">Summa: ${priceProduct} kr</p>
+        </div>
+      </div>
+      <button class="remove-item">
+        <span class="fa-solid fa-xmark"></span>
+      </button>
+`;
+      totalCostEl.innerHTML = `${totalCost} kr`;
+      cartlistEL.appendChild(newItemInCart);
+    });
+  }
+};
 
 const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
 
@@ -160,3 +307,5 @@ closeCartEl.addEventListener("click", (e: MouseEvent) => {
     cartWrapperEl.classList.add("hide");
   }
 });
+
+getAndRenderProducts();

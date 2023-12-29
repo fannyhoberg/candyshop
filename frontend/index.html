@@ -39,15 +39,15 @@
         <span id="close-cart" class="icon-element fa-solid fa-xmark"></span>
       </div>
 
-      <div id="cart-default" class="">
+      <div id="cart-default" class="empty-cart">
         <p>Din varukorg är tom!</p>
       </div>
 
-      <div id="cart" class="hide">
+      <div id="cart">
         <!-- CART <ul> ELEMENT -->
         <ul id="cart-list">
           <!-- CART <li> ELEMENT -->
-          <li class="list-item">
+          <!-- <li class="list-item">
             <div class="list-item-content">
               <img
                 class="cart-thumbnail"
@@ -81,14 +81,14 @@
             <button class="remove-item">
               <span class="fa-solid fa-xmark"></span>
             </button>
-          </li>
+          </li> -->
         </ul>
 
         <!-- CART TOTAL -->
         <div id="cart-total-wrap">
           <div class="cart-total-price">
             <p>Totalt</p>
-            <p>36 kr</p>
+            <p id="totalCost"></p>
           </div>
 
           <button class="button">
