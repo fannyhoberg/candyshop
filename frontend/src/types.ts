@@ -37,3 +37,23 @@ export interface OrderItem {
   item_total: number,
 }
 
+export interface OrderDataObject {
+  data: OrderData,
+}
+
+export interface OrderData {
+  created_at: string,
+  customer_address: string,
+  customer_city: string,
+  customer_email: string,
+  customer_first_name: string,
+  customer_last_name: string,
+  customer_phone: string,
+  customer_postcode: string,
+  id: number,
+
+  order_date: string,
+  order_total: number,
+  updated_at: string,
+  user_id: string
+}

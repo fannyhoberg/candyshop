@@ -1,7 +1,7 @@
-import { submitOrder } from "./api";
-import { NewOrder } from "./types";
+import { fetchOrders, submitOrder } from "./api";
+import { NewOrder, OrderData } from "./types";
 
-
+const checkOutPage = document.querySelector<HTMLElement>('#checkout-container');
 export const checkoutForm = document.querySelector<HTMLFormElement>('#checkout-form');
 // const formInputFields = document.querySelectorAll<HTMLInputElement>('input.form-input');
 const formFirstName = document.querySelector<HTMLInputElement>('#first-name');
@@ -11,6 +11,15 @@ const formPostcode = document.querySelector<HTMLInputElement>('#zipcode');
 const formCity = document.querySelector<HTMLInputElement>('#city');
 const formPhone = document.querySelector<HTMLInputElement>('#phone');
 const formEmail = document.querySelector<HTMLInputElement>('#email');
+
+const renderSuccessMessage = (orderData: OrderData) => {
+    checkOutPage!.innerHTML = `
+    <div id="submit-response">
+      <h2>Tack för din beställning!</h2>
+      <p>Ditt ordernummer är ${orderData.id}</p>
+    </div>`
+};
+
 
 checkoutForm?.addEventListener('submit', async (e) => {
 
@@ -39,17 +48,18 @@ checkoutForm?.addEventListener('submit', async (e) => {
 
     try {
         // POST todo to the API
-        await submitOrder(newOrder);
-        console.log("submitted!");
+        const response = await submitOrder(newOrder);
+        console.log("submitted!", response);
 
-        // Get the updated list of todos from the API
+        const orderData = response.data;
 
-        // Finally, clear the input-field
-        // if (formInputFields) {
-        //     formInputFields.forEach(element => {
-        //         element.value = "";
-        //     })
-        // }
+        console.log("This is your order data: ", orderData.id);
+
+        let orders = await fetchOrders();
+        console.log("These are all orders", orders);
+
+        renderSuccessMessage(orderData);
+
     } catch (err) {
         alert("Could not submit order! Please check the server.")
     }
