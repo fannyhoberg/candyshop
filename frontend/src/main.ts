@@ -2,6 +2,7 @@ import { fetchProducts } from "./api";
 import { Product, ProductObject, CartItem } from "./types";
 import { displayProductPopup, closePopup } from "./product-info-popup";
 import "./style.css";
+
 // import "bootstrap/dist/css/bootstrap.css";
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
@@ -71,7 +72,7 @@ const renderProducts = (array: Product[]) => {
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail" id="candy-image">
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
-      <p><span id="candy-price">${product.price}</span> kronor</p> 
+      <p id="candy-price">${product.price}</p> kronor
       <p id="stock-quantity">${product.stock_quantity}</p>
       <button id="add-to-cart" class="button" data-id="${product.id}">Lägg i varukorg</button>
       </div>
@@ -162,7 +163,9 @@ container.addEventListener("click", (e: MouseEvent) => {
     console.log("Detta är candyname:", candyNameToCart);
 
     // get reference for clicked candy image source
-    let candyImageSrc: { thumbnail: string } = { thumbnail: "" };
+    let candyImageSrc: {
+      thumbnail: string;
+    } = { thumbnail: "" };
     if (parentProductEl) {
       const candyImageElement = parentProductEl.querySelector(
         "#candy-image"
@@ -204,13 +207,12 @@ container.addEventListener("click", (e: MouseEvent) => {
       }
     }
     console.log("Detta är candyStockQuantity:", candyStockQuantity);
-
     // call function addToCart with value of clicked candy
     if (Number(candyStockQuantity) > 0) {
       addToCart(
         product_id,
         candyNameToCart,
-        candyImageSrc.thumbnail,
+        { thumbnail: candyImageSrc.thumbnail },
         Number(candyPriceToCart)
       );
     } else {
@@ -225,21 +227,20 @@ container.addEventListener("click", (e: MouseEvent) => {
       totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
     }
   }
-
   // Need to save data to Local Storage with every click on button
 });
 
 // empty cart array
 let carts: CartItem[] = [];
 
-const cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
+let cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
 const cartEl = document.querySelector<HTMLElement>("#cart")!;
 
 // function to add product to cart array and update quantity
 const addToCart = (
   product_id: number,
   candyNameToCart: string,
-  candyImageSrc: string,
+  candyImageSrc: { thumbnail: string },
   candyPriceToCart: number
 ) => {
   let productInCart = carts.findIndex((value) => value.id == product_id);
@@ -251,7 +252,7 @@ const addToCart = (
         images: candyImageSrc,
         name: candyNameToCart,
         id: product_id,
-        quantity: 1,
+        stock_quantity: 1,
       },
     ];
     // checks if productInCart does not exists in cart, then push to cart
@@ -261,49 +262,56 @@ const addToCart = (
       images: candyImageSrc,
       name: candyNameToCart,
       id: product_id,
-      quantity: 1,
+      stock_quantity: 1,
     });
     // if productInCart already is in cart, then only increase quantity by 1
   } else {
-    carts[productInCart].quantity = carts[productInCart].quantity + 1;
+    carts[productInCart].stock_quantity =
+      carts[productInCart].stock_quantity + 1;
   }
   //call function to render to cart
   addToCartRender();
   console.log("detta är carts : ", carts);
 };
 
+//
+
 const totalCostEl = document.querySelector<HTMLElement>("#totalCost")!;
-// render products to shoppingcart
+
 const addToCartRender = () => {
-  cartlistEL.innerHTML = ``;
+  // make sure cartlistEl isn't null
+  if (cartlistEL) {
+    cartlistEL.innerHTML = ``;
 
-  if (carts.length > 0) {
-    cartEl.classList.remove("hide");
+    if (carts.length > 0) {
+      cartEl.classList.remove("hide");
 
-    const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
-    if (cartDefaultEl.classList.contains("empty-cart")) {
-      cartDefaultEl.classList.add("hide");
-    }
+      const cartDefaultEl =
+        document.querySelector<HTMLElement>("#cart-default")!;
+      if (cartDefaultEl.classList.contains("empty-cart")) {
+        cartDefaultEl.classList.add("hide");
+      }
 
-    let totalCost = 0;
+      let totalCost = 0;
 
-    carts.forEach((cart) => {
-      let newItemInCart = document.createElement("li");
-      let priceProduct = cart.price * cart.quantity;
+      carts.forEach((cart) => {
+        let newItemInCart = document.createElement("li");
+        let priceProduct = cart.price * cart.stock_quantity;
 
-      totalCost += priceProduct;
+        totalCost += priceProduct;
 
-      newItemInCart.classList.add("list-item");
-      newItemInCart.innerHTML = `
+        newItemInCart.classList.add("list-item");
+        newItemInCart.setAttribute("data-cart-id", cart.id.toString()); // THIS IS THE VALUE I WANT!!
+        newItemInCart.innerHTML = `
       <div class="list-item-content">
         <img
           class="cart-thumbnail"
-          src="${cart.images}"
+          src="${cart.images.thumbnail}"
           alt="Product thumbnail"
         />
         <div class="list-text-content">
           <p class="cart-item-title">${cart.name}</p>
-          <p class="cart-item-price">Antal: ${cart.quantity} st</p>
+          <p class="cart-item-price">Antal: ${cart.stock_quantity} st</p>
           <p class="cart-item-price">Summa: ${priceProduct} kr</p>
         </div>
       </div>
@@ -311,36 +319,70 @@ const addToCartRender = () => {
         <span class="fa-solid fa-xmark"></span>
       </button>
 `;
+
+        cartlistEL.appendChild(newItemInCart);
+      });
+
       totalCostEl.innerHTML = `${totalCost} kr`;
-      cartlistEL.appendChild(newItemInCart);
-    });
+      // go to checkout from cart
+
+      // reference to total cart div
+      // add event listener to div and target "till kassan" button
+      // only works if text is clicked atm!
+
+      const goToCheckout =
+        document.querySelector<HTMLElement>("#cart-total-wrap")!;
+      //reference to checkout
+      const checkout = document.querySelector<HTMLElement>(
+        "#checkout-container"
+      )!;
+
+      goToCheckout?.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).tagName === "P") {
+          console.log("you want to go to checkout!");
+          checkout.classList.remove("hide");
+        }
+      });
+    }
+
+    const json = JSON.stringify(carts);
+    localStorage.setItem("carts", json);
+
+    console.log("Cart rendered successfully!");
+  } else {
+    console.error("#cart-list element not found.");
   }
-  const json = JSON.stringify(carts);
-  localStorage.setItem("carts", json);
 };
 
 const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
 
 const openCartEl = document.querySelector<HTMLElement>("#open-cart")!;
 
-// Eventlistener for click on shopping cart, click will open cart
-openCartEl.addEventListener("click", (e: MouseEvent) => {
-  const target = e.target as HTMLElement;
-  // check if click was on button
-  if (target.classList.contains("fa-cart-shopping")) {
-    cartWrapperEl.classList.remove("hide");
-  }
-});
+const openCart = () => {
+  // Eventlistener for click on shopping cart, click will open cart
+  openCartEl.addEventListener("click", (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    // check if click was on button
+    if (target.classList.contains("fa-cart-shopping")) {
+      cartWrapperEl.classList.remove("hide");
+    }
+  });
+};
+
+openCart();
 
 // Eventlistener to close cart
 const closeCartEl = document.querySelector<HTMLElement>("#close-cart")!;
 
-closeCartEl.addEventListener("click", (e: MouseEvent) => {
-  const target = e.target as HTMLElement;
-  if (target.classList.contains("fa-xmark")) {
-    cartWrapperEl.classList.add("hide");
-  }
-});
+const closeCart = () => {
+  closeCartEl.addEventListener("click", (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains("fa-xmark")) {
+      cartWrapperEl.classList.add("hide");
+    }
+  });
+};
+closeCart();
 
 getAndRenderProducts();
 
@@ -394,5 +436,4 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 });
 
 // END OF DELETING ITEMS CODE
-
 getItemsFromLocalStorage();

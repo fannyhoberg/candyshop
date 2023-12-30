@@ -22,7 +22,18 @@ export interface CartItem {
   id: number;
   name: string;
   price: number;
+  images: {
+    thumbnail: string;
+  };
+  stock_quantity: number;
+}
+
+/* export interface CartItem {
+  id: number;
+  name: string;
+  price: number;
   images: string;
   quantity: number;
   // stock_quantity: number;
 }
+*/
