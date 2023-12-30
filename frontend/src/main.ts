@@ -41,9 +41,18 @@ const getAndRenderProducts = async () => {
     productArray = products.data;
     console.log("product array: ", productArray);
 
-    // productArray.forEach((item) => {
-    //   console.log(item.name);
-    // });
+    // sort array in alphabetic order
+    productArray.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+
+      if (a.name > b.name) {
+        return 1;
+      }
+
+      return 0;
+    });
 
     //Render products
     renderProducts(productArray);
@@ -62,7 +71,8 @@ const renderProducts = (array: Product[]) => {
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail" id="candy-image">
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
-      <p id="candy-price">${product.price}</p> kronor
+      <p><span id="candy-price">${product.price}</span> kronor</p> 
+      <p id="stock-quantity">${product.stock_quantity}</p>
       <button id="add-to-cart" class="button" data-id="${product.id}">Lägg i varukorg</button>
       </div>
       </div>
@@ -111,6 +121,10 @@ const handleProductClick = (e: MouseEvent) => {
 // call the close popup function
 closePopup(productInfoContainer, productInfoWrap);
 
+// get items from local storage when page reloads
+
+localStorage.getItem("carts") ?? "";
+
 // FANNYS KOD NEDAN
 
 let totalAmount = 0;
@@ -148,7 +162,7 @@ container.addEventListener("click", (e: MouseEvent) => {
     console.log("Detta är candyname:", candyNameToCart);
 
     // get reference for clicked candy image source
-    let candyImageSrc: string = "";
+    let candyImageSrc: string;
     if (parentProductEl) {
       const candyImageElement = parentProductEl.querySelector(
         "#candy-image"
@@ -176,17 +190,38 @@ container.addEventListener("click", (e: MouseEvent) => {
     }
     console.log("Detta är candyPriceToCart:", candyPriceToCart);
 
-    // call function addToCart with value of clicked candy
-    addToCart(
-      product_id,
-      candyNameToCart,
-      candyImageSrc,
-      Number(candyPriceToCart)
-    );
+    // get reference for clicked candy stock quantity
+    let candyStockQuantity: string = "";
 
+    if (parentProductEl) {
+      const candyStockQuantityEl = parentProductEl.querySelector(
+        "#stock-quantity"
+      ) as HTMLElement;
+
+      // Check that candyNameElement is not null
+      if (candyStockQuantityEl) {
+        candyStockQuantity = candyStockQuantityEl.textContent || "";
+      }
+    }
+    console.log("Detta är candyStockQuantity:", candyStockQuantity);
+
+    // call function addToCart with value of clicked candy
+    if (Number(candyStockQuantity) > 0) {
+      addToCart(
+        product_id,
+        candyNameToCart,
+        candyImageSrc,
+        Number(candyPriceToCart)
+      );
+    } else {
+      alert("Denna produkt saknas i lager!");
+    }
     // count for clicks and display next to cart
-    totalAmount++;
-    if (totalAmount > 0) {
+
+    if (Number(candyStockQuantity) > 0) {
+      totalAmount++;
+    }
+    if (totalAmount > 0 && Number(candyStockQuantity) > 0) {
       totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
     }
   }
@@ -204,9 +239,7 @@ const cartEl = document.querySelector<HTMLElement>("#cart")!;
 const addToCart = (
   product_id: number,
   candyNameToCart: string,
-  candyImageSrc: {
-    thumbnail: string;
-  },
+  candyImageSrc: string,
   candyPriceToCart: number
 ) => {
   let productInCart = carts.findIndex((value) => value.id == product_id);
@@ -218,7 +251,7 @@ const addToCart = (
         images: candyImageSrc,
         name: candyNameToCart,
         id: product_id,
-        stock_quantity: 1,
+        quantity: 1,
       },
     ];
     // checks if productInCart does not exists in cart, then push to cart
@@ -228,12 +261,11 @@ const addToCart = (
       images: candyImageSrc,
       name: candyNameToCart,
       id: product_id,
-      stock_quantity: 1,
+      quantity: 1,
     });
     // if productInCart already is in cart, then only increase quantity by 1
   } else {
-    carts[productInCart].stock_quantity =
-      carts[productInCart].stock_quantity + 1;
+    carts[productInCart].quantity = carts[productInCart].quantity + 1;
   }
   //call function to render to cart
   addToCartRender();
@@ -257,7 +289,7 @@ const addToCartRender = () => {
 
     carts.forEach((cart) => {
       let newItemInCart = document.createElement("li");
-      let priceProduct = cart.price * cart.stock_quantity;
+      let priceProduct = cart.price * cart.quantity;
 
       totalCost += priceProduct;
 
@@ -271,7 +303,7 @@ const addToCartRender = () => {
         />
         <div class="list-text-content">
           <p class="cart-item-title">${cart.name}</p>
-          <p class="cart-item-price">Antal: ${cart.stock_quantity} st</p>
+          <p class="cart-item-price">Antal: ${cart.quantity} st</p>
           <p class="cart-item-price">Summa: ${priceProduct} kr</p>
         </div>
       </div>
@@ -283,6 +315,8 @@ const addToCartRender = () => {
       cartlistEL.appendChild(newItemInCart);
     });
   }
+  const json = JSON.stringify(carts);
+  localStorage.setItem("carts", json);
 };
 
 const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
@@ -309,3 +343,18 @@ closeCartEl.addEventListener("click", (e: MouseEvent) => {
 });
 
 getAndRenderProducts();
+
+// function to get items from local storage
+const getItemsFromLocalStorage = () => {
+  const savedCarts: CartItem[] = JSON.parse(
+    localStorage.getItem("carts") || "[]"
+  );
+
+  // update cart with data
+  carts = savedCarts;
+  // render items from local storage
+
+  addToCartRender();
+};
+
+getItemsFromLocalStorage();
