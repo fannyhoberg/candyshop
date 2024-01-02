@@ -196,7 +196,7 @@ const handleProductClick = (e: MouseEvent) => {
       addToCart(
         product_id,
         candyNameToCart,
-        { thumbnail: candyImageSrc.thumbnail },
+        candyImageSrc,
         Number(candyPriceToCart)
       );
     } else {
@@ -212,8 +212,6 @@ const handleProductClick = (e: MouseEvent) => {
     }
   }
 };
-
-// FANNYS KOD NEDAN
 
 // call the close popup function
 closePopup(productInfoContainer, productInfoWrap);
@@ -232,105 +230,6 @@ const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
 let carts: CartItem[] = [];
 
 let cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
-// Eventlistener for container with candies, listening for clicks on button
-container.addEventListener("click", (e: MouseEvent) => {
-  const target = e.target as HTMLElement;
-  // check if click was on button
-  if (target.tagName === "BUTTON") {
-    console.log("Du klickade på knappen", e);
-
-    // get and store product-id
-    let product_id = Number(target.dataset.id);
-    console.log("Detta är product_id", product_id);
-
-    // get reference for closest product card
-    const parentProductEl = target.closest(".product-card") as HTMLElement;
-    console.log("Detta är parentProductEl; ", parentProductEl);
-
-    // get reference for clicked candy name
-    let candyNameToCart: string = "";
-
-    if (parentProductEl) {
-      const candyNameElement = parentProductEl.querySelector(
-        "#candy-name"
-      ) as HTMLHeadingElement;
-
-      // Check that candyNameElement is not null
-      if (candyNameElement) {
-        candyNameToCart = candyNameElement.textContent || "";
-      }
-    }
-    console.log("Detta är candyname:", candyNameToCart);
-
-    // get reference for clicked candy image source
-    let candyImageSrc: {
-      thumbnail: string;
-    } = { thumbnail: "" };
-    if (parentProductEl) {
-      const candyImageElement = parentProductEl.querySelector(
-        "#candy-image"
-      ) as HTMLImageElement;
-
-      // Kontrollera att candyImageElement inte är null innan du fortsätter
-      if (candyImageElement) {
-        candyImageSrc.thumbnail = candyImageElement.getAttribute("src") || "";
-      }
-    }
-    console.log("Detta är candyImageSrc:", candyImageSrc);
-
-    // get reference for clicked candy price
-    let candyPriceToCart: string = "";
-
-    if (parentProductEl) {
-      const candyPriceElement = parentProductEl.querySelector(
-        "#candy-price"
-      ) as HTMLElement;
-
-      // Check that candyNameElement is not null
-      if (candyPriceElement) {
-        candyPriceToCart = candyPriceElement.textContent || "";
-      }
-    }
-    console.log("Detta är candyPriceToCart:", candyPriceToCart);
-
-    // get reference for clicked candy stock quantity
-    let candyStockQuantity: string = "";
-
-    if (parentProductEl) {
-      const candyStockQuantityEl = parentProductEl.querySelector(
-        "#stock-quantity"
-      ) as HTMLElement;
-
-      // Check that candyNameElement is not null
-      if (candyStockQuantityEl) {
-        candyStockQuantity = candyStockQuantityEl.textContent || "";
-      }
-    }
-    console.log("Detta är candyStockQuantity:", candyStockQuantity);
-
-    // call function addToCart with value of clicked candy
-    if (Number(candyStockQuantity) > 0) {
-      addToCart(
-        product_id,
-        candyNameToCart,
-        candyImageSrc,
-        Number(candyPriceToCart)
-      );
-    } else {
-      alert("Denna produkt saknas i lager!");
-    }
-    // count for clicks and display next to cart
-
-    if (Number(candyStockQuantity) > 0) {
-      totalAmount++;
-    }
-    if (totalAmount > 0 && Number(candyStockQuantity) > 0) {
-      totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
-    }
-  }
-
-  // Need to save data to Local Storage with every click on button
-});
 
 const cartEl = document.querySelector<HTMLElement>("#cart")!;
 
@@ -393,11 +292,12 @@ const addToCartRender = () => {
       totalCost += priceProduct;
 
       newItemInCart.classList.add("list-item");
+      newItemInCart.setAttribute("data-cart-id", cart.id.toString()); // THIS IS THE VALUE I WANT!!
       newItemInCart.innerHTML = `
       <div class="list-item-content">
         <img
           class="cart-thumbnail"
-          src="${cart.images}"
+          src="${cart.images.thumbnail}"
           alt="Product thumbnail"
         />
         <div class="list-text-content">
@@ -419,7 +319,6 @@ const addToCartRender = () => {
 
     // reference to total cart div
     // add event listener to div and target "till kassan" button
-    // only works if text is clicked atm!
 
     const goToCheckout =
       document.querySelector<HTMLElement>("#cart-total-wrap")!;
@@ -438,11 +337,6 @@ const addToCartRender = () => {
 
   const json = JSON.stringify(carts);
   localStorage.setItem("carts", json);
-
-  //   console.log("Cart rendered successfully!");
-  // } else {
-  //   console.log("#cart-list element not found.");
-  // }
 };
 
 const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
