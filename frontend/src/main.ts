@@ -9,7 +9,8 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
-const productOverviewInstock = document.querySelector<HTMLSpanElement>('#products-instock')!;
+const productOverviewInstock =
+  document.querySelector<HTMLSpanElement>("#products-instock")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
 // declare variables for info popup
@@ -57,10 +58,9 @@ const getAndRenderProducts = async () => {
       return 0;
     });
 
-
     const productsInStock = productArray.filter((item) => {
-      return item.stock_status === "instock"
-    })
+      return item.stock_status === "instock";
+    });
 
     console.log("Products in stock:", productsInStock.length);
 
@@ -105,12 +105,13 @@ const renderProducts = (array: Product[]) => {
   array.forEach((product) => {
     if (product.stock_quantity < 1) {
       const productId = product.id;
-      const addToCartButton = document.querySelector<HTMLButtonElement>(`[data-id="${productId}"]`);
+      const addToCartButton = document.querySelector<HTMLButtonElement>(
+        `[data-id="${productId}"]`
+      );
 
-      if (addToCartButton)
-        addToCartButton.disabled = true;
+      if (addToCartButton) addToCartButton.disabled = true;
     }
-  })
+  });
 };
 
 const handleProductClick = (e: MouseEvent) => {
@@ -212,13 +213,16 @@ const handleProductClick = (e: MouseEvent) => {
       }
     }
     console.log("Detta är candyStockQuantity:", candyStockQuantity);
+
+    let candyPriceTotal = Number(candyPriceToCart);
     // call function addToCart with value of clicked candy
     if (Number(candyStockQuantity) > 0) {
       addToCart(
         product_id,
         candyNameToCart,
         candyImageSrc,
-        Number(candyPriceToCart)
+        Number(candyPriceToCart),
+        Number(candyPriceTotal)
       );
     } else {
       alert("Denna produkt saknas i lager!");
@@ -259,34 +263,43 @@ const addToCart = (
   product_id: number,
   candyNameToCart: string,
   candyImageSrc: { thumbnail: string },
-  candyPriceToCart: number
+  candyPriceToCart: number,
+  candyPriceTotal: number
 ) => {
   let productInCart = carts.findIndex((value) => value.id == product_id);
+
   // checks if cart is empty, then fill cart with info
   if (carts.length <= 0) {
     carts = [
       {
+        total: candyPriceTotal,
         price: candyPriceToCart,
         images: candyImageSrc,
         name: candyNameToCart,
         id: product_id,
-        quantity: 1,
+        quantity: "1",
       },
     ];
     // checks if productInCart does not exists in cart, then push to cart
   } else if (productInCart < 0) {
     carts.push({
+      total: candyPriceTotal,
       price: candyPriceToCart,
       images: candyImageSrc,
       name: candyNameToCart,
       id: product_id,
-      quantity: 1,
+      quantity: "1",
     });
     // if productInCart already is in cart, then only increase quantity by 1
+    // also calculate total price when user adds same item more than once
   } else {
-    carts[productInCart].quantity = carts[productInCart].quantity + 1;
-  };
+    let updatedQty = Number(carts[productInCart].quantity) + 1;
+    carts[productInCart].quantity = updatedQty.toString();
+    carts[productInCart].total =
+      Number(carts[productInCart].quantity) * candyPriceToCart;
 
+    console.log("carts tjohejsan: ", carts[productInCart].quantity);
+  }
   //call function to render to cart
   addToCartRender();
   console.log("detta är carts : ", carts);
@@ -309,7 +322,7 @@ const addToCartRender = () => {
 
     carts.forEach((cart) => {
       let newItemInCart = document.createElement("li");
-      let priceProduct = cart.price * cart.quantity;
+      let priceProduct = cart.price * Number(cart.quantity);
 
       totalCost += priceProduct;
 

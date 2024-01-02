@@ -19,15 +19,15 @@ export interface Product {
 }
 
 export interface NewOrder {
-  customer_first_name: string,
-  customer_last_name: string,
-  customer_address: string,
-  customer_postcode: string,
-  customer_city: string,
-  customer_email: string,
-  customer_phone: string,
-  order_total: number,
-  order_items: OrderItem[]
+  customer_first_name: string;
+  customer_last_name: string;
+  customer_address: string;
+  customer_postcode: string;
+  customer_city: string;
+  customer_email: string;
+  customer_phone: string;
+  order_total: number;
+  order_items: OrderItem[];
 }
 
 export interface OrderItem {
@@ -38,34 +38,35 @@ export interface OrderItem {
 }
 
 export interface OrderDataObject {
-  data: OrderData,
+  data: OrderData;
 }
 
 export interface OrderData {
-  created_at: string,
-  customer_address: string,
-  customer_city: string,
-  customer_email: string,
-  customer_first_name: string,
-  customer_last_name: string,
-  customer_phone: string,
-  customer_postcode: string,
-  id: number,
+  created_at: string;
+  customer_address: string;
+  customer_city: string;
+  customer_email: string;
+  customer_first_name: string;
+  customer_last_name: string;
+  customer_phone: string;
+  customer_postcode: string;
+  id: number;
 
-  order_date: string,
-  order_total: number,
-  updated_at: string,
-  user_id: string
+  order_date: string;
+  order_total: number;
+  updated_at: string;
+  user_id: string;
 }
 
 export interface CartItem {
   id: number;
   name: string;
   price: number;
+  total: number;
   images: {
     thumbnail: string;
   };
-  quantity: number;
+  quantity: string;
 }
 
 

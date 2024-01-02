@@ -26,8 +26,12 @@ const renderSuccessMessage = (orderData: OrderData) => {
 let orderToSubmit: OrderItem[] = JSON.parse(localStorage.getItem("carts") || "[]");
 
 const totalOrderPrice: number = orderToSubmit.reduce((total, orderItem) => {
-    return total + (orderItem.qty * orderItem.item_price);
+    return total + (Number(orderItem.qty) * orderItem.item_price);
 }, 0);
+
+orderToSubmit.forEach((item) => {
+    console.log(item.qty);
+})
 
 
 console.log("This is the order to submit:", orderToSubmit);
