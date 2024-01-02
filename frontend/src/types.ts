@@ -61,11 +61,11 @@ export interface CartItem {
   id: number;
   name: string;
   price: number;
-
+  total: number;
   images: {
     thumbnail: string;
   };
-  quantity: number;
+  quantity: string;
 }
 
 /* export interface CartItem {
