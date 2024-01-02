@@ -22,23 +22,50 @@ const renderSuccessMessage = (orderData: OrderData) => {
     </div>`
 };
 
+let orderToSubmit: CartItem[] = [];
 
-let orderToSubmit: OrderItem[] = JSON.parse(localStorage.getItem("carts") || "[]");
+// const totalOrderPrice: number = orderToSubmit.reduce((total, orderItem) => {
+//     return total + (Number(orderItem.qty) * orderItem.item_price);
+// }, 0);
 
-const totalOrderPrice: number = orderToSubmit.reduce((total, orderItem) => {
+// orderToSubmit.forEach((item) => {
+//     console.log(item.qty);
+// })
+
+// console.log("This is the order to submit:", orderToSubmit);
+// console.log("This is the total order price:", totalOrderPrice);
+
+
+// Function to transform a cart item into an order item
+const transformOrderItem = (cartItem: CartItem): OrderItem => {
+    return {
+        product_id: cartItem.id,
+        qty: cartItem.quantity,
+        item_price: cartItem.price,
+        item_total: cartItem.total,
+    };
+}
+
+// Retrieve localStorage and transform it to an array that matches the order template
+export const localStorageConvert = (localStorageArray: string): OrderItem[] => {
+
+    orderToSubmit = JSON.parse(localStorage.getItem(localStorageArray) || "[]");
+    console.log("this is the order before converting", orderToSubmit);
+
+    const convertOrderToTemplate: OrderItem[] = orderToSubmit.map(transformOrderItem);
+
+    return convertOrderToTemplate;
+};
+
+const convertedOrderToSubmit = localStorageConvert("carts");
+console.log(convertedOrderToSubmit)
+
+// Calculate total order cost
+const totalOrderPrice: number = convertedOrderToSubmit.reduce((total, orderItem) => {
     return total + (Number(orderItem.qty) * orderItem.item_price);
 }, 0);
 
-orderToSubmit.forEach((item) => {
-    console.log(item.qty);
-})
-
-
-console.log("This is the order to submit:", orderToSubmit);
-console.log("This is the total order price:", totalOrderPrice);
-
-
-
+console.log(totalOrderPrice);
 
 checkoutForm?.addEventListener('submit', async (e) => {
 
@@ -53,7 +80,7 @@ checkoutForm?.addEventListener('submit', async (e) => {
         customer_email: formEmail?.value || "",
         customer_phone: formPhone?.value || "",
         order_total: totalOrderPrice,
-        order_items: orderToSubmit,
+        order_items: convertedOrderToSubmit,
     }
 
     console.log("Will submit new order to API:", newOrder);

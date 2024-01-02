@@ -4,8 +4,6 @@ import { displayProductPopup, closePopup } from "./product-info-popup";
 import "./submit-order";
 import "./style.css";
 
-// import "bootstrap/dist/css/bootstrap.css";
-
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
@@ -465,3 +463,4 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 
 // END OF DELETING ITEMS CODE
 getItemsFromLocalStorage();
+
