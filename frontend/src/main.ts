@@ -72,7 +72,7 @@ const renderProducts = (array: Product[]) => {
       <img src="https://www.bortakvall.se${product.images.thumbnail}" alt="Product thumbnail" class="product-image-thumbnail" id="candy-image">
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
-      <p id="candy-price">${product.price}</p> kronor
+      <p><span id="candy-price">${product.price}</span> kronor</p> 
       <p id="stock-quantity">${product.stock_quantity}</p>
       <button id="add-to-cart" class="button" data-id="${product.id}">Lägg i varukorg</button>
       </div>
@@ -232,6 +232,106 @@ const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
 let carts: CartItem[] = [];
 
 let cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
+// Eventlistener for container with candies, listening for clicks on button
+container.addEventListener("click", (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  // check if click was on button
+  if (target.tagName === "BUTTON") {
+    console.log("Du klickade på knappen", e);
+
+    // get and store product-id
+    let product_id = Number(target.dataset.id);
+    console.log("Detta är product_id", product_id);
+
+    // get reference for closest product card
+    const parentProductEl = target.closest(".product-card") as HTMLElement;
+    console.log("Detta är parentProductEl; ", parentProductEl);
+
+    // get reference for clicked candy name
+    let candyNameToCart: string = "";
+
+    if (parentProductEl) {
+      const candyNameElement = parentProductEl.querySelector(
+        "#candy-name"
+      ) as HTMLHeadingElement;
+
+      // Check that candyNameElement is not null
+      if (candyNameElement) {
+        candyNameToCart = candyNameElement.textContent || "";
+      }
+    }
+    console.log("Detta är candyname:", candyNameToCart);
+
+    // get reference for clicked candy image source
+    let candyImageSrc: {
+      thumbnail: string;
+    } = { thumbnail: "" };
+    if (parentProductEl) {
+      const candyImageElement = parentProductEl.querySelector(
+        "#candy-image"
+      ) as HTMLImageElement;
+
+      // Kontrollera att candyImageElement inte är null innan du fortsätter
+      if (candyImageElement) {
+        candyImageSrc.thumbnail = candyImageElement.getAttribute("src") || "";
+      }
+    }
+    console.log("Detta är candyImageSrc:", candyImageSrc);
+
+    // get reference for clicked candy price
+    let candyPriceToCart: string = "";
+
+    if (parentProductEl) {
+      const candyPriceElement = parentProductEl.querySelector(
+        "#candy-price"
+      ) as HTMLElement;
+
+      // Check that candyNameElement is not null
+      if (candyPriceElement) {
+        candyPriceToCart = candyPriceElement.textContent || "";
+      }
+    }
+    console.log("Detta är candyPriceToCart:", candyPriceToCart);
+
+    // get reference for clicked candy stock quantity
+    let candyStockQuantity: string = "";
+
+    if (parentProductEl) {
+      const candyStockQuantityEl = parentProductEl.querySelector(
+        "#stock-quantity"
+      ) as HTMLElement;
+
+      // Check that candyNameElement is not null
+      if (candyStockQuantityEl) {
+        candyStockQuantity = candyStockQuantityEl.textContent || "";
+      }
+    }
+    console.log("Detta är candyStockQuantity:", candyStockQuantity);
+
+    // call function addToCart with value of clicked candy
+    if (Number(candyStockQuantity) > 0) {
+      addToCart(
+        product_id,
+        candyNameToCart,
+        candyImageSrc,
+        Number(candyPriceToCart)
+      );
+    } else {
+      alert("Denna produkt saknas i lager!");
+    }
+    // count for clicks and display next to cart
+
+    if (Number(candyStockQuantity) > 0) {
+      totalAmount++;
+    }
+    if (totalAmount > 0 && Number(candyStockQuantity) > 0) {
+      totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
+    }
+  }
+
+  // Need to save data to Local Storage with every click on button
+});
+
 const cartEl = document.querySelector<HTMLElement>("#cart")!;
 
 // function to add product to cart array and update quantity
@@ -250,7 +350,7 @@ const addToCart = (
         images: candyImageSrc,
         name: candyNameToCart,
         id: product_id,
-        stock_quantity: 1,
+        quantity: 1,
       },
     ];
     // checks if productInCart does not exists in cart, then push to cart
@@ -260,56 +360,49 @@ const addToCart = (
       images: candyImageSrc,
       name: candyNameToCart,
       id: product_id,
-      stock_quantity: 1,
+      quantity: 1,
     });
     // if productInCart already is in cart, then only increase quantity by 1
   } else {
-    carts[productInCart].stock_quantity =
-      carts[productInCart].stock_quantity + 1;
+    carts[productInCart].quantity = carts[productInCart].quantity + 1;
   }
   //call function to render to cart
   addToCartRender();
   console.log("detta är carts : ", carts);
 };
 
-//
-
 const totalCostEl = document.querySelector<HTMLElement>("#totalCost")!;
-
+// render products to shoppingcart
 const addToCartRender = () => {
-  // make sure cartlistEl isn't null
-  if (cartlistEL) {
-    cartlistEL.innerHTML = ``;
+  cartlistEL.innerHTML = ``;
 
-    if (carts.length > 0) {
-      cartEl.classList.remove("hide");
+  if (carts.length > 0) {
+    cartEl.classList.remove("hide");
 
-      const cartDefaultEl =
-        document.querySelector<HTMLElement>("#cart-default")!;
-      if (cartDefaultEl.classList.contains("empty-cart")) {
-        cartDefaultEl.classList.add("hide");
-      }
+    const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
+    if (cartDefaultEl.classList.contains("empty-cart")) {
+      cartDefaultEl.classList.add("hide");
+    }
 
-      let totalCost = 0;
+    let totalCost = 0;
 
-      carts.forEach((cart) => {
-        let newItemInCart = document.createElement("li");
-        let priceProduct = cart.price * cart.stock_quantity;
+    carts.forEach((cart) => {
+      let newItemInCart = document.createElement("li");
+      let priceProduct = cart.price * cart.quantity;
 
-        totalCost += priceProduct;
+      totalCost += priceProduct;
 
-        newItemInCart.classList.add("list-item");
-        newItemInCart.setAttribute("data-cart-id", cart.id.toString()); // THIS IS THE VALUE I WANT!!
-        newItemInCart.innerHTML = `
+      newItemInCart.classList.add("list-item");
+      newItemInCart.innerHTML = `
       <div class="list-item-content">
         <img
           class="cart-thumbnail"
-          src="${cart.images.thumbnail}"
+          src="${cart.images}"
           alt="Product thumbnail"
         />
         <div class="list-text-content">
           <p class="cart-item-title">${cart.name}</p>
-          <p class="cart-item-price">Antal: ${cart.stock_quantity} st</p>
+          <p class="cart-item-price">Antal: ${cart.quantity} st</p>
           <p class="cart-item-price">Summa: ${priceProduct} kr</p>
         </div>
       </div>
@@ -318,38 +411,38 @@ const addToCartRender = () => {
       </button>
 `;
 
-        cartlistEL.appendChild(newItemInCart);
-      });
+      cartlistEL.appendChild(newItemInCart);
+    });
 
-      totalCostEl.innerHTML = `${totalCost} kr`;
-      // go to checkout from cart
+    totalCostEl.innerHTML = `${totalCost} kr`;
+    // go to checkout from cart
 
-      // reference to total cart div
-      // add event listener to div and target "till kassan" button
-      // only works if text is clicked atm!
+    // reference to total cart div
+    // add event listener to div and target "till kassan" button
+    // only works if text is clicked atm!
 
-      const goToCheckout =
-        document.querySelector<HTMLElement>("#cart-total-wrap")!;
-      //reference to checkout
-      const checkout = document.querySelector<HTMLElement>(
-        "#checkout-container"
-      )!;
+    const goToCheckout =
+      document.querySelector<HTMLElement>("#cart-total-wrap")!;
+    //reference to checkout
+    const checkout = document.querySelector<HTMLElement>(
+      "#checkout-container"
+    )!;
 
-      goToCheckout?.addEventListener("click", (e) => {
-        if ((e.target as HTMLElement).tagName === "BUTTON") {
-          console.log("you want to go to checkout!");
-          checkout.classList.remove("hide");
-        }
-      });
-    }
-
-    const json = JSON.stringify(carts);
-    localStorage.setItem("carts", json);
-
-    console.log("Cart rendered successfully!");
-  } else {
-    console.error("#cart-list element not found.");
+    goToCheckout?.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).tagName === "BUTTON") {
+        console.log("you want to go to checkout!");
+        checkout.classList.remove("hide");
+      }
+    });
   }
+
+  const json = JSON.stringify(carts);
+  localStorage.setItem("carts", json);
+
+  //   console.log("Cart rendered successfully!");
+  // } else {
+  //   console.log("#cart-list element not found.");
+  // }
 };
 
 const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;

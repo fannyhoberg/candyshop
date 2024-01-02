@@ -25,7 +25,7 @@ export interface CartItem {
   images: {
     thumbnail: string;
   };
-  stock_quantity: number;
+  quantity: number;
 }
 
 /* export interface CartItem {
