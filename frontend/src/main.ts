@@ -7,11 +7,8 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
-<<<<<<< HEAD
-=======
 const productOverviewInstock =
   document.querySelector<HTMLSpanElement>("#products-instock")!;
->>>>>>> 5e12e02d12a402625c715d9ca972f66f8212e8c6
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
 // declare variables for info popup
@@ -62,15 +59,12 @@ const getAndRenderProducts = async () => {
       return 0;
     });
 
-<<<<<<< HEAD
-=======
     const productsInStock = productArray.filter((item) => {
       return item.stock_status === "instock";
     });
 
     console.log("Products in stock:", productsInStock.length);
 
->>>>>>> 5e12e02d12a402625c715d9ca972f66f8212e8c6
     //Render products
     renderProducts(productArray);
     productOverviewCount.innerHTML = `${productArray.length}`;
@@ -105,8 +99,6 @@ const renderProducts = (array: Product[]) => {
   productCards.forEach((productCard) => {
     productCard.addEventListener("click", handleProductClick);
   });
-<<<<<<< HEAD
-=======
 
   array.forEach((product) => {
     if (product.stock_quantity < 1) {
@@ -118,7 +110,6 @@ const renderProducts = (array: Product[]) => {
       if (addToCartButton) addToCartButton.disabled = true;
     }
   });
->>>>>>> 5e12e02d12a402625c715d9ca972f66f8212e8c6
 };
 
 const handleProductClick = (e: MouseEvent) => {
@@ -194,7 +185,7 @@ container.addEventListener("click", (e: MouseEvent) => {
     console.log("Detta är candyname:", candyNameToCart);
 
     // get reference for clicked candy image source
-    let candyImageSrc: string;
+    let candyImageSrc: { thumbnail: string } = { thumbnail: "" };
     if (parentProductEl) {
       const candyImageElement = parentProductEl.querySelector(
         "#candy-image"
@@ -202,7 +193,7 @@ container.addEventListener("click", (e: MouseEvent) => {
 
       // Kontrollera att candyImageElement inte är null innan du fortsätter
       if (candyImageElement) {
-        candyImageSrc = candyImageElement.getAttribute("src") || "";
+        candyImageSrc.thumbnail = candyImageElement.getAttribute("src") || "";
       }
     }
     console.log("Detta är candyImageSrc:", candyImageSrc);
@@ -271,7 +262,7 @@ const cartEl = document.querySelector<HTMLElement>("#cart")!;
 const addToCart = (
   product_id: number,
   candyNameToCart: string,
-  candyImageSrc: string,
+  candyImageSrc: { thumbnail: string },
   candyPriceToCart: number
 ) => {
   let productInCart = carts.findIndex((value) => value.id == product_id);
