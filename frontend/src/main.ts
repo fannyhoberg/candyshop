@@ -10,6 +10,10 @@ const productOverviewCount =
 const productOverviewInstock =
   document.querySelector<HTMLSpanElement>("#products-instock")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
+// reference to cart total wrap
+const goToCheckout = document.querySelector<HTMLElement>("#cart-total-wrap")!;
+// reference to cart default
+const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
 
 // declare variables for info popup
 
@@ -311,7 +315,6 @@ const addToCartRender = () => {
   if (carts.length > 0) {
     cartEl.classList.remove("hide");
 
-    const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
     if (cartDefaultEl.classList.contains("empty-cart")) {
       cartDefaultEl.classList.add("hide");
     }
@@ -352,9 +355,6 @@ const addToCartRender = () => {
 
     // reference to total cart div
     // add event listener to div and target "till kassan" button
-
-    const goToCheckout =
-      document.querySelector<HTMLElement>("#cart-total-wrap")!;
     //reference to checkout
     const checkout = document.querySelector<HTMLElement>(
       "#checkout-container"
@@ -455,7 +455,8 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
       console.log("carts when deleting: ", carts);
 
       if (carts.length < 1) {
-        totalCostEl.innerHTML = "0 kr";
+        cartDefaultEl.classList.remove("hide");
+        goToCheckout.classList.add("hide");
       }
     }
   });
