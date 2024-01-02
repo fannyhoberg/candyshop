@@ -7,6 +7,11 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
+<<<<<<< HEAD
+=======
+const productOverviewInstock =
+  document.querySelector<HTMLSpanElement>("#products-instock")!;
+>>>>>>> 5e12e02d12a402625c715d9ca972f66f8212e8c6
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
 // declare variables for info popup
@@ -22,6 +27,9 @@ const candyDescription =
 const productInfoContainer = document.querySelector<HTMLElement>(
   ".product-info-container"
 )!;
+
+const popupStockQty =
+  document.querySelector<HTMLParagraphElement>("#stock-quantity")!;
 
 // declare variable to store value returned from fetch function
 let products: ProductObject;
@@ -54,6 +62,15 @@ const getAndRenderProducts = async () => {
       return 0;
     });
 
+<<<<<<< HEAD
+=======
+    const productsInStock = productArray.filter((item) => {
+      return item.stock_status === "instock";
+    });
+
+    console.log("Products in stock:", productsInStock.length);
+
+>>>>>>> 5e12e02d12a402625c715d9ca972f66f8212e8c6
     //Render products
     renderProducts(productArray);
     productOverviewCount.innerHTML = `${productArray.length}`;
@@ -88,6 +105,20 @@ const renderProducts = (array: Product[]) => {
   productCards.forEach((productCard) => {
     productCard.addEventListener("click", handleProductClick);
   });
+<<<<<<< HEAD
+=======
+
+  array.forEach((product) => {
+    if (product.stock_quantity < 1) {
+      const productId = product.id;
+      const addToCartButton = document.querySelector<HTMLButtonElement>(
+        `[data-id="${productId}"]`
+      );
+
+      if (addToCartButton) addToCartButton.disabled = true;
+    }
+  });
+>>>>>>> 5e12e02d12a402625c715d9ca972f66f8212e8c6
 };
 
 const handleProductClick = (e: MouseEvent) => {
@@ -110,7 +141,8 @@ const handleProductClick = (e: MouseEvent) => {
         productInfoWrap,
         candyName,
         candyDescription,
-        largeImage
+        largeImage,
+        popupStockQty
       );
     }
 
