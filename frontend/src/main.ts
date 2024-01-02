@@ -82,7 +82,8 @@ const renderProducts = (array: Product[]) => {
     .join("");
 
   // get a reference to all product cards on page and add eventlistener to each product card
-
+  // querySelectorAll on (".product-card") returns a node list of HTML elements
+  // the node list consists of all elements with the class of product-card
   const productCards = document.querySelectorAll(
     ".product-card"
   ) as NodeListOf<HTMLElement>;
@@ -117,23 +118,6 @@ const handleProductClick = (e: MouseEvent) => {
 
     console.log("You clicked the product card image with ID:", productId);
   }
-};
-
-// call the close popup function
-closePopup(productInfoContainer, productInfoWrap);
-
-// get items from local storage when page reloads
-
-localStorage.getItem("carts") ?? "";
-
-// FANNYS KOD NEDAN
-
-let totalAmount = 0;
-
-const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
-
-// Eventlistener for container with candies, listening for clicks on button
-container.addEventListener("click", (e: MouseEvent) => {
   const target = e.target as HTMLElement;
   // check if click was on button
   if (target.tagName === "BUTTON") {
@@ -227,8 +211,22 @@ container.addEventListener("click", (e: MouseEvent) => {
       totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
     }
   }
-  // Need to save data to Local Storage with every click on button
-});
+};
+
+// FANNYS KOD NEDAN
+
+// call the close popup function
+closePopup(productInfoContainer, productInfoWrap);
+
+// get items from local storage when page reloads
+
+localStorage.getItem("carts") ?? "";
+
+// FANNYS KOD NEDAN
+
+let totalAmount = 0;
+
+const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
 
 // empty cart array
 let carts: CartItem[] = [];
@@ -316,7 +314,7 @@ const addToCartRender = () => {
         </div>
       </div>
       <button class="remove-item">
-        <span class="fa-solid fa-xmark"></span>
+        x
       </button>
 `;
 
@@ -338,7 +336,7 @@ const addToCartRender = () => {
       )!;
 
       goToCheckout?.addEventListener("click", (e) => {
-        if ((e.target as HTMLElement).tagName === "P") {
+        if ((e.target as HTMLElement).tagName === "BUTTON") {
           console.log("you want to go to checkout!");
           checkout.classList.remove("hide");
         }
@@ -407,7 +405,15 @@ const getItemsFromLocalStorage = () => {
 document.querySelectorAll("#cart-list").forEach((listEl) => {
   //listen for clicks on the list
   listEl.addEventListener("click", (e) => {
-    if ((e.target as HTMLButtonElement).tagName === "BUTTON") {
+    // if ((e.target as HTMLButtonElement).tagName === "BUTTON") {
+    //   console.log("you want to remove item!");
+
+    if ((e.target as HTMLElement).closest(".remove-item")) {
+      //decrease totalAmount when item is removed
+      totalAmount--;
+      // render update totalAmount to DOM(cart symbol)
+      totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
+      console.log("total amount is: ", totalAmount);
       console.log("you want to remove item!");
 
       // get the data-cart-id from the parent (LI) element
