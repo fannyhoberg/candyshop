@@ -111,10 +111,15 @@
     <h2>KASSA</h2>
 
     <!-- ORDER FORM -->
-    <form name="checkout" method="post">
+    <form name="checkout" method="post" id="checkout-form">
       <div class="form-field">
-        <label for="name">Namn*</label><br />
-        <input type="text" id="name" name="name" required /><br />
+        <label for="first-name">Förnamn*</label><br>
+        <input type="text" id="first-name" name="first-name" class="form-input" required><br>
+      </div>
+
+      <div class="form-field">
+        <label for="last-name">Efternamn*</label><br>
+        <input type="text" id="last-name" name="last-name" class="form-input" required><br>
       </div>
 
       <div class="form-field">
