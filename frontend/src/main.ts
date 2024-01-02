@@ -1,15 +1,12 @@
 import { fetchProducts } from "./api";
 import { Product, ProductObject, CartItem } from "./types";
 import { displayProductPopup, closePopup } from "./product-info-popup";
-import "./submit-order";
 import "./style.css";
-
 // import "bootstrap/dist/css/bootstrap.css";
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
-const productOverviewInstock = document.querySelector<HTMLSpanElement>('#products-instock')!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
 // declare variables for info popup
@@ -57,19 +54,11 @@ const getAndRenderProducts = async () => {
       return 0;
     });
 
-
-    const productsInStock = productArray.filter((item) => {
-      return item.stock_status === "instock"
-    })
-
-    console.log("Products in stock:", productsInStock.length);
-
     //Render products
     renderProducts(productArray);
     productOverviewCount.innerHTML = `${productArray.length}`;
-    productOverviewInstock!.innerHTML = `${productsInStock.length}`;
   } catch (err) {
-    alert("Could not get products, try again later?");
+    alert("Could not get todos, try again later?");
   }
 };
 
@@ -83,7 +72,7 @@ const renderProducts = (array: Product[]) => {
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
       <p><span id="candy-price">${product.price}</span> kronor</p> 
-      <p id="stock-quantity" class="hide">${product.stock_quantity}</p>
+      <p id="stock-quantity">${product.stock_quantity}</p>
       <button id="add-to-cart" class="button" data-id="${product.id}">Lägg i varukorg</button>
       </div>
       </div>
@@ -92,25 +81,13 @@ const renderProducts = (array: Product[]) => {
     .join("");
 
   // get a reference to all product cards on page and add eventlistener to each product card
-  // querySelectorAll on (".product-card") returns a node list of HTML elements
-  // the node list consists of all elements with the class of product-card
+
   const productCards = document.querySelectorAll(
     ".product-card"
   ) as NodeListOf<HTMLElement>;
-
   productCards.forEach((productCard) => {
     productCard.addEventListener("click", handleProductClick);
   });
-
-  array.forEach((product) => {
-    if (product.stock_quantity < 1) {
-      const productId = product.id;
-      const addToCartButton = document.querySelector<HTMLButtonElement>(`[data-id="${productId}"]`);
-
-      if (addToCartButton)
-        addToCartButton.disabled = true;
-    }
-  })
 };
 
 const handleProductClick = (e: MouseEvent) => {
@@ -139,6 +116,23 @@ const handleProductClick = (e: MouseEvent) => {
 
     console.log("You clicked the product card image with ID:", productId);
   }
+};
+
+// call the close popup function
+closePopup(productInfoContainer, productInfoWrap);
+
+// get items from local storage when page reloads
+
+localStorage.getItem("carts") ?? "";
+
+// FANNYS KOD NEDAN
+
+let totalAmount = 0;
+
+const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
+
+// Eventlistener for container with candies, listening for clicks on button
+container.addEventListener("click", (e: MouseEvent) => {
   const target = e.target as HTMLElement;
   // check if click was on button
   if (target.tagName === "BUTTON") {
@@ -168,9 +162,7 @@ const handleProductClick = (e: MouseEvent) => {
     console.log("Detta är candyname:", candyNameToCart);
 
     // get reference for clicked candy image source
-    let candyImageSrc: {
-      thumbnail: string;
-    } = { thumbnail: "" };
+    let candyImageSrc: string;
     if (parentProductEl) {
       const candyImageElement = parentProductEl.querySelector(
         "#candy-image"
@@ -178,7 +170,7 @@ const handleProductClick = (e: MouseEvent) => {
 
       // Kontrollera att candyImageElement inte är null innan du fortsätter
       if (candyImageElement) {
-        candyImageSrc.thumbnail = candyImageElement.getAttribute("src") || "";
+        candyImageSrc = candyImageElement.getAttribute("src") || "";
       }
     }
     console.log("Detta är candyImageSrc:", candyImageSrc);
@@ -212,6 +204,7 @@ const handleProductClick = (e: MouseEvent) => {
       }
     }
     console.log("Detta är candyStockQuantity:", candyStockQuantity);
+
     // call function addToCart with value of clicked candy
     if (Number(candyStockQuantity) > 0) {
       addToCart(
@@ -232,33 +225,21 @@ const handleProductClick = (e: MouseEvent) => {
       totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
     }
   }
-};
 
-// call the close popup function
-closePopup(productInfoContainer, productInfoWrap);
-
-// get items from local storage when page reloads
-
-localStorage.getItem("carts") ?? "";
-
-// FANNYS KOD NEDAN
-
-let totalAmount = 0;
-
-const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
+  // Need to save data to Local Storage with every click on button
+});
 
 // empty cart array
-export let carts: CartItem[] = [];
+let carts: CartItem[] = [];
 
-let cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
-
+const cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
 const cartEl = document.querySelector<HTMLElement>("#cart")!;
 
 // function to add product to cart array and update quantity
 const addToCart = (
   product_id: number,
   candyNameToCart: string,
-  candyImageSrc: { thumbnail: string },
+  candyImageSrc: string,
   candyPriceToCart: number
 ) => {
   let productInCart = carts.findIndex((value) => value.id == product_id);
@@ -313,12 +294,11 @@ const addToCartRender = () => {
       totalCost += priceProduct;
 
       newItemInCart.classList.add("list-item");
-      newItemInCart.setAttribute("data-cart-id", cart.id.toString()); // THIS IS THE VALUE I WANT!!
       newItemInCart.innerHTML = `
       <div class="list-item-content">
         <img
           class="cart-thumbnail"
-          src="${cart.images.thumbnail}"
+          src="${cart.images}"
           alt="Product thumbnail"
         />
         <div class="list-text-content">
@@ -328,34 +308,13 @@ const addToCartRender = () => {
         </div>
       </div>
       <button class="remove-item">
-        x
+        <span class="fa-solid fa-xmark"></span>
       </button>
 `;
-
+      totalCostEl.innerHTML = `${totalCost} kr`;
       cartlistEL.appendChild(newItemInCart);
     });
-
-    totalCostEl.innerHTML = `${totalCost} kr`;
-    // go to checkout from cart
-
-    // reference to total cart div
-    // add event listener to div and target "till kassan" button
-
-    const goToCheckout =
-      document.querySelector<HTMLElement>("#cart-total-wrap")!;
-    //reference to checkout
-    const checkout = document.querySelector<HTMLElement>(
-      "#checkout-container"
-    )!;
-
-    goToCheckout?.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).tagName === "BUTTON") {
-        console.log("you want to go to checkout!");
-        checkout.classList.remove("hide");
-      }
-    });
   }
-
   const json = JSON.stringify(carts);
   localStorage.setItem("carts", json);
 };
@@ -364,36 +323,29 @@ const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
 
 const openCartEl = document.querySelector<HTMLElement>("#open-cart")!;
 
-const openCart = () => {
-  // Eventlistener for click on shopping cart, click will open cart
-  openCartEl.addEventListener("click", (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    // check if click was on button
-    if (target.classList.contains("fa-cart-shopping")) {
-      cartWrapperEl.classList.remove("hide");
-    }
-  });
-};
-
-openCart();
+// Eventlistener for click on shopping cart, click will open cart
+openCartEl.addEventListener("click", (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  // check if click was on button
+  if (target.classList.contains("fa-cart-shopping")) {
+    cartWrapperEl.classList.remove("hide");
+  }
+});
 
 // Eventlistener to close cart
 const closeCartEl = document.querySelector<HTMLElement>("#close-cart")!;
 
-const closeCart = () => {
-  closeCartEl.addEventListener("click", (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.classList.contains("fa-xmark")) {
-      cartWrapperEl.classList.add("hide");
-    }
-  });
-};
-closeCart();
+closeCartEl.addEventListener("click", (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  if (target.classList.contains("fa-xmark")) {
+    cartWrapperEl.classList.add("hide");
+  }
+});
 
 getAndRenderProducts();
 
 // function to get items from local storage
-export const getItemsFromLocalStorage = () => {
+const getItemsFromLocalStorage = () => {
   const savedCarts: CartItem[] = JSON.parse(
     localStorage.getItem("carts") || "[]"
   );
@@ -405,49 +357,4 @@ export const getItemsFromLocalStorage = () => {
   addToCartRender();
 };
 
-// MATTEAS CODE FOR REMOVING CART ITEM
-
-// add eventlistener to cart UL and target close button
-// the goal is to delete items from cart!!
-
-document.querySelectorAll("#cart-list").forEach((listEl) => {
-  //listen for clicks on the list
-  listEl.addEventListener("click", (e) => {
-    // if ((e.target as HTMLButtonElement).tagName === "BUTTON") {
-    //   console.log("you want to remove item!");
-
-    if ((e.target as HTMLElement).closest(".remove-item")) {
-      //decrease totalAmount when item is removed
-      totalAmount--;
-      // render update totalAmount to DOM(cart symbol)
-      totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
-      console.log("total amount is: ", totalAmount);
-      console.log("you want to remove item!");
-
-      // get the data-cart-id from the parent (LI) element
-      const parentLiEl = (e.target as HTMLElement).parentElement;
-      console.log("parentLiEl is: ", parentLiEl);
-      const clickedItemId = Number(parentLiEl?.dataset.cartId); // convert to a number
-
-      console.log("clicked item id is: ", clickedItemId);
-      // search cart for the item with the title "clickedItem"
-      const clickedItem = carts.find((item) => {
-        return item.id === clickedItemId;
-      });
-      console.log("clicked item is: ", clickedItem);
-
-      carts = carts.filter((item) => item.id !== clickedItemId);
-
-      addToCartRender();
-
-      console.log("carts when deleting: ", carts);
-
-      if (carts.length < 1) {
-        totalCostEl.innerHTML = "0 kr";
-      }
-    }
-  });
-});
-
-// END OF DELETING ITEMS CODE
 getItemsFromLocalStorage();
