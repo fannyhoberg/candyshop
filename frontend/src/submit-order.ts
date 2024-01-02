@@ -1,5 +1,6 @@
 import { fetchOrders, submitOrder } from "./api";
 import { NewOrder, OrderData } from "./types";
+// import { getItemsFromLocalStorage } from "./main";
 
 const checkOutPage = document.querySelector<HTMLElement>('#checkout-container');
 export const checkoutForm = document.querySelector<HTMLFormElement>('#checkout-form');
@@ -19,6 +20,7 @@ const renderSuccessMessage = (orderData: OrderData) => {
       <p>Ditt ordernummer är ${orderData.id}</p>
     </div>`
 };
+
 
 
 checkoutForm?.addEventListener('submit', async (e) => {

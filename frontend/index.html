@@ -108,53 +108,14 @@
     </div>
   </div>
 
-  <!-- CHECKOUT SECTION -->
-  <div id="checkout-container" class="hide">
-    <h2>KASSA</h2>
-
-    <!-- ORDER FORM -->
-    <form name="checkout" method="post">
-      <div class="form-field">
-        <label for="name">Namn*</label><br />
-        <input type="text" id="name" name="name" required /><br />
-      </div>
-
-      <div class="form-field">
-        <label for="address">Adress*</label><br />
-        <input type="text" id="address" name="address" required /><br />
-      </div>
-
-      <div class="form-field">
-        <label for="zipcode">Postnummer*</label><br />
-        <input type="number" id="zipcode" name="zipcode" required /><br />
-      </div>
-
-      <div class="form-field">
-        <label for="city">Ort*</label><br />
-        <input type="text" id="city" name="city" required /><br />
-      </div>
-
-      <div class="form-field">
-        <label for="phone">Telefon</label><br />
-        <input type="tel" id="phone" name="phone" /><br />
-      </div>
-
-      <div class="form-field">
-        <label for="email">E-mail*</label><br />
-        <input type="email" id="email" name="email" required /><br />
-      </div>
-
-      <input type="submit" value="Beställ" class="button" />
-    </form>
-  </div>
 
   <!-- PRODUCT COUNT -->
   <div class="container">
-    <p>Showing <span id="product-count"></span> products</p>
+    <p>Visar <span id="product-count"></span> produkter varav <span id="products-instock"></span> är i lager</p>
   </div>
 
   <!-- CHECKOUT SECTION -->
-  <div id="checkout-container" class="">
+  <div id="checkout-container" class="hide">
     <h2>KASSA</h2>
 
     <!-- ORDER FORM -->
@@ -196,12 +157,6 @@
 
       <input type="submit" value="Beställ" class="button">
     </form>
-  </div>
-
-
-  <!-- PRODUCT COUNT -->
-  <div class="container">
-    <p>Showing <span id="product-count"></span> products</p>
   </div>
 
   <!-- PRODUCT SECTION CONTAINER -->

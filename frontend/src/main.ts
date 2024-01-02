@@ -8,6 +8,7 @@ import "./style.css";
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
+const productOverviewInstock = document.querySelector<HTMLSpanElement>('#products-instock')!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 
 // declare variables for info popup
@@ -55,11 +56,19 @@ const getAndRenderProducts = async () => {
       return 0;
     });
 
+
+    const productsInStock = productArray.filter((item) => {
+      return item.stock_status === "instock"
+    })
+
+    console.log("Products in stock:", productsInStock.length);
+
     //Render products
     renderProducts(productArray);
     productOverviewCount.innerHTML = `${productArray.length}`;
+    productOverviewInstock!.innerHTML = `${productsInStock.length}`;
   } catch (err) {
-    alert("Could not get todos, try again later?");
+    alert("Could not get products, try again later?");
   }
 };
 
@@ -73,7 +82,7 @@ const renderProducts = (array: Product[]) => {
       <div class="product-card-content">
       <h2 id="candy-name">${product.name}</h2>
       <p><span id="candy-price">${product.price}</span> kronor</p> 
-      <p id="stock-quantity">${product.stock_quantity}</p>
+      <p id="stock-quantity" class="hide">${product.stock_quantity}</p>
       <button id="add-to-cart" class="button" data-id="${product.id}">Lägg i varukorg</button>
       </div>
       </div>
@@ -86,9 +95,20 @@ const renderProducts = (array: Product[]) => {
   const productCards = document.querySelectorAll(
     ".product-card"
   ) as NodeListOf<HTMLElement>;
+
   productCards.forEach((productCard) => {
     productCard.addEventListener("click", handleProductClick);
   });
+
+  array.forEach((product) => {
+    if (product.stock_quantity < 1) {
+      const productId = product.id;
+      const addToCartButton = document.querySelector<HTMLButtonElement>(`[data-id="${productId}"]`);
+
+      if (addToCartButton)
+        addToCartButton.disabled = true;
+    }
+  })
 };
 
 const handleProductClick = (e: MouseEvent) => {
@@ -231,7 +251,7 @@ container.addEventListener("click", (e: MouseEvent) => {
 });
 
 // empty cart array
-let carts: CartItem[] = [];
+export let carts: CartItem[] = [];
 
 const cartlistEL = document.querySelector<HTMLElement>("#cart-list")!;
 const cartEl = document.querySelector<HTMLElement>("#cart")!;
@@ -346,7 +366,7 @@ closeCartEl.addEventListener("click", (e: MouseEvent) => {
 getAndRenderProducts();
 
 // function to get items from local storage
-const getItemsFromLocalStorage = () => {
+export const getItemsFromLocalStorage = () => {
   const savedCarts: CartItem[] = JSON.parse(
     localStorage.getItem("carts") || "[]"
   );
