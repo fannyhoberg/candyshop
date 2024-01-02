@@ -285,7 +285,8 @@ const addToCart = (
     // if productInCart already is in cart, then only increase quantity by 1
   } else {
     carts[productInCart].quantity = carts[productInCart].quantity + 1;
-  }
+  };
+
   //call function to render to cart
   addToCartRender();
   console.log("detta är carts : ", carts);

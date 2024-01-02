@@ -1,5 +1,6 @@
 import { fetchOrders, submitOrder } from "./api";
 import { NewOrder, OrderData } from "./types";
+import { CartItem, OrderItem } from "./types";
 // import { getItemsFromLocalStorage } from "./main";
 
 const checkOutPage = document.querySelector<HTMLElement>('#checkout-container');
@@ -22,6 +23,18 @@ const renderSuccessMessage = (orderData: OrderData) => {
 };
 
 
+let orderToSubmit: OrderItem[] = JSON.parse(localStorage.getItem("carts") || "[]");
+
+const totalOrderPrice: number = orderToSubmit.reduce((total, orderItem) => {
+    return total + (orderItem.qty * orderItem.item_price);
+}, 0);
+
+
+console.log("This is the order to submit:", orderToSubmit);
+console.log("This is the total order price:", totalOrderPrice);
+
+
+
 
 checkoutForm?.addEventListener('submit', async (e) => {
 
@@ -35,15 +48,8 @@ checkoutForm?.addEventListener('submit', async (e) => {
         customer_city: formCity?.value || "",
         customer_email: formEmail?.value || "",
         customer_phone: formPhone?.value || "",
-        order_total: 24,
-        order_items: [
-            {
-                product_id: 5216,
-                qty: "2",
-                item_price: 12,
-                item_total: 24
-            }
-        ],
+        order_total: totalOrderPrice,
+        order_items: orderToSubmit,
     }
 
     console.log("Will submit new order to API:", newOrder);
