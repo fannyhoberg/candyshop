@@ -146,16 +146,16 @@ const handleProductClick = (e: MouseEvent) => {
 
     console.log("You clicked the product card image with ID:", productId);
   }
-  const target = e.target as HTMLElement;
+  //const target = e.target as HTMLElement;
   // check if click was on button
-  if (target.tagName === "BUTTON") {
+  if (clickedElement.tagName === "BUTTON") {
     console.log("Du klickade på knappen", e);
     console.log("knappen har id: ", productId);
     // get reference for closest product card
 
     // changed clickedElement to let and replaced parentProductEl with clickedElement!
     // get reference for closest product card
-    clickedElement = target.closest(".product-card") as HTMLElement;
+    //clickedElement = target.closest(".product-card") as HTMLElement;
 
     // find the clicked product from array
     const clickedProduct = productArray.find(
