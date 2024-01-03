@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;500;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -7,14 +7,13 @@
 
 html {
   scroll-behavior: smooth;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #120202;
 }
 
-
 /* TEXT STYLES*/
 h1 {
-  font-family: 'Anton', sans-serif;
+  font-family: "Anton", sans-serif;
   text-transform: uppercase;
   font-size: 3.75rem;
 }
@@ -33,20 +32,18 @@ span.icon-element {
 }
 
 span.nav-logo {
-  font-family: 'Anton', sans-serif;
+  font-family: "Anton", sans-serif;
   text-transform: uppercase;
 }
 
 a {
   text-decoration: none;
   color: #120202;
-  ;
 }
 
 .centered {
   text-align: center;
 }
-
 
 /* GENERAL STYLES */
 
@@ -65,13 +62,13 @@ button:disabled {
 .button {
   width: 100%;
   height: 2.2rem;
-  background-color: #FFF;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 25px;
   border-radius: 10px;
-  border: 1px solid #FEC3FF;
+  border: 1px solid #fec3ff;
   cursor: pointer;
 }
 
@@ -126,7 +123,7 @@ header {
   z-index: 0;
   height: 100%;
   width: 100%;
-  background-color: #ED9595;
+  background-color: #ed9595;
   mix-blend-mode: lighten;
 }
 
@@ -134,14 +131,13 @@ header a.button {
   width: auto;
 }
 
-
 /* NAV */
 
 nav {
   width: 100%;
   height: 75px;
   padding: 0 20px;
-  background-color: #FFF;
+  background-color: #fff;
   position: fixed;
   z-index: 100;
   top: 0;
@@ -149,14 +145,13 @@ nav {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #84A59D;
+  border-bottom: 1px solid #84a59d;
 }
 
 nav span.icon-element,
 #cart-nav span.icon-element.fa-solid {
   cursor: pointer;
 }
-
 
 /* CART */
 
@@ -168,7 +163,7 @@ nav span.icon-element,
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 #cart-nav {
@@ -176,12 +171,12 @@ nav span.icon-element,
   width: 100%;
   min-height: 75px;
   padding: 0 20px;
-  background-color: #FFF;
+  background-color: #fff;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #84A59D;
+  border-bottom: 1px solid #84a59d;
 }
 
 #cart-default {
@@ -237,7 +232,7 @@ button.remove-item {
   width: 22px;
   padding: 0;
   margin: 0;
-  background-color: #FFF;
+  background-color: #fff;
   border: none;
   border-radius: 5px;
 }
@@ -253,13 +248,12 @@ button.remove-item {
   margin: 15px 0px;
 }
 
-
 /* CHECKOUT */
 
 #checkout-container {
   width: 100vw;
   height: 100vh;
-  background-color: #FFF;
+  background-color: #fff;
   position: fixed;
   top: 0;
   z-index: 110;
@@ -280,23 +274,21 @@ form {
 form input {
   width: 100%;
   height: 2.2rem;
-  background-color: #FFF;
+  background-color: #fff;
   border-radius: 10px;
-  border: 1px solid #FEC3FF;
+  border: 1px solid #fec3ff;
   margin-top: 5px;
   padding-left: 10px;
 }
 
-input[type=submit] {
-  background-color: #FEC3FF;
+input[type="submit"] {
+  background-color: #fec3ff;
   font-size: 16px;
 }
 
 #response-message {
   padding: 10px;
 }
-
-
 
 /* PRODUCT CARDS */
 
@@ -320,7 +312,6 @@ input[type=submit] {
   cursor: pointer;
 }
 
-
 /* PRODUCT POPUP MODULE */
 
 .product-info-wrap {
@@ -336,8 +327,8 @@ input[type=submit] {
 
 .product-info-container {
   width: 100%;
-  background-color: #FFF;
-  border: 1px solid #FEC3FF;
+  background-color: #fff;
+  border: 1px solid #fec3ff;
   padding: 20px 20px 40px 20px;
   overflow: scroll;
 }
@@ -346,7 +337,6 @@ input[type=submit] {
   margin-bottom: 30px;
   width: 70%;
 }
-
 
 /* FOOTER */
 
@@ -365,7 +355,6 @@ footer {
 /* TABLET */
 
 @media only screen and (min-width: 600px) {
-
   .container {
     padding: 30px 20px;
     row-gap: 30px;
@@ -387,13 +376,11 @@ footer {
   form {
     max-width: 70%;
   }
-
 }
 
 /* DESKTOP */
 
 @media only screen and (min-width: 992px) {
-
   .container {
     max-width: 1200px;
     row-gap: 30px;
@@ -409,7 +396,7 @@ footer {
     width: 400px;
     top: 0;
     right: 0;
-    border-left: 1px solid #FEC3FF;
+    border-left: 1px solid #fec3ff;
   }
 
   #cart-nav {
@@ -424,9 +411,4 @@ footer {
   .product-info-container img {
     max-width: 50%;
   }
-
-
-  /* .product-image-large {
-    max-width: 500px;
-  } */
 }

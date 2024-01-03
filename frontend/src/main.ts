@@ -5,14 +5,13 @@ import { closeCheckout } from "./checkout";
 import { renderOrderSummary } from "./checkout";
 import "./submit-order";
 import "./style.css";
-// import { localStorageConvert, convertedOrderToSubmit } from "./submit-order";
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
   document.querySelector<HTMLSpanElement>("#product-count")!;
 const productOverviewInstock =
   document.querySelector<HTMLSpanElement>("#products-instock")!;
-//const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
+
 // reference to cart total wrap
 export const goToCheckout =
   document.querySelector<HTMLElement>("#cart-total-wrap")!;
@@ -29,7 +28,6 @@ const largeImage = document.querySelector<HTMLImageElement>(
 )!;
 const candyStock = document.querySelector<HTMLElement>("#candy-popup-stock")!;
 let candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
-console.log("checking candy name and it is candyName is: ", candyName);
 const candyPrice = document.querySelector<HTMLElement>("#candy-popup-price")!;
 const candyDescription =
   document.querySelector<HTMLParagraphElement>("#candy-description")!;
@@ -49,11 +47,8 @@ const getAndRenderProducts = async () => {
     // Fetch products from server and updates local copy
     products = await fetchProducts();
 
-    console.log("These are our products", products);
-
     // create array from "data" keyword (on ProducObject)
     productArray = products.data;
-    console.log("product array: ", productArray);
 
     // sort array in alphabetic order
     productArray.sort((a, b) => {
@@ -71,8 +66,6 @@ const getAndRenderProducts = async () => {
     const productsInStock = productArray.filter((item) => {
       return item.stock_status === "instock";
     });
-
-    console.log("Products in stock:", productsInStock.length);
 
     //Render products
     renderProducts(productArray);
@@ -125,7 +118,6 @@ const renderProducts = (array: Product[]) => {
 };
 
 const handleProductClick = (e: MouseEvent) => {
-  console.log("Handle Product Click triggered");
   let clickedElement = e.target as HTMLElement;
   // When someething is clicked, Retrieve the product ID from the data attribute
   // keep in scope of entire function for re-usability
@@ -152,21 +144,14 @@ const handleProductClick = (e: MouseEvent) => {
         largeImage
       );
     }
-
-    console.log("You clicked the product card image with ID:", productId);
   }
 
   // check if click was on button
   if (clickedElement.tagName === "BUTTON") {
-    console.log("Du klickade på knappen", e);
-    console.log("knappen har id: ", productId);
-
     // find the clicked product from array
     const clickedProduct = productArray.find(
       (product) => product.id === Number(productId)
     );
-
-    let candyPriceEl = document.querySelector<HTMLElement>("#candy-price")!;
 
     let candyNameToCart: string = "";
     let candyPriceToCart: string = "";
@@ -182,11 +167,6 @@ const handleProductClick = (e: MouseEvent) => {
       candyStockQuantity = clickedProduct.stock_quantity.toString();
       candyImageSrc.thumbnail = `https://www.bortakvall.se${clickedProduct.images.thumbnail}`;
     }
-
-    console.log("detta är candyName: ", candyName.innerHTML);
-    console.log("Detta är candyPriceToCart:", candyPriceEl.innerHTML);
-    console.log("Detta är candyStockQuantity:", candyStockQuantity);
-    console.log("Detta är candyImageSrc:", candyImageSrc);
 
     let candyPriceTotal = Number(candyPriceToCart);
     // call function addToCart with value of clicked candy
@@ -218,10 +198,6 @@ const handleProductClick = (e: MouseEvent) => {
 closePopup(productInfoContainer, productInfoWrap);
 
 // get items from local storage when page reloads
-
-// localStorage.getItem("carts") ?? "";
-
-// FANNYS KOD NEDAN
 
 export let totalAmount = 0;
 
@@ -274,13 +250,10 @@ const addToCart = (
     carts[productInCart].quantity = updatedQty.toString();
     carts[productInCart].total =
       Number(carts[productInCart].quantity) * candyPriceToCart;
-
-    console.log("carts tjohejsan: ", carts[productInCart].quantity);
   }
   //call function to render to cart
   addToCartRender();
   renderOrderSummary();
-  console.log("detta är carts : ", carts);
 };
 
 const totalCostEl = document.querySelector<HTMLElement>("#totalCost")!;
@@ -305,7 +278,7 @@ const addToCartRender = () => {
       totalCost += priceProduct;
 
       newItemInCart.classList.add("list-item");
-      newItemInCart.setAttribute("data-cart-id", cart.id.toString()); // THIS IS THE VALUE I WANT!!
+      newItemInCart.setAttribute("data-cart-id", cart.id.toString());
       newItemInCart.innerHTML = `
       <div class="list-item-content">
         <img
@@ -330,7 +303,6 @@ const addToCartRender = () => {
     totalCostEl.innerHTML = `${totalCost} kr`;
     // go to checkout from cart
 
-    // reference to total cart div
     // add event listener to div and target "till kassan" button
     //reference to checkout
     const checkout = document.querySelector<HTMLElement>(
@@ -339,7 +311,6 @@ const addToCartRender = () => {
 
     goToCheckout?.addEventListener("click", (e) => {
       if ((e.target as HTMLElement).tagName === "BUTTON") {
-        console.log("you want to go to checkout!");
         checkout.classList.remove("hide");
       }
     });
@@ -365,7 +336,6 @@ const openCart = () => {
 
     if (totalAmount === 0) {
       cartEl.classList.add("hide");
-      console.log("Total amount är 0");
     }
   });
 };
@@ -414,47 +384,29 @@ export const getItemsFromLocalStorage = () => {
   }
 };
 
-// MATTEAS CODE FOR REMOVING CART ITEM
-
 // add eventlistener to cart UL and target close button
-// the goal is to delete items from cart!!
 
 document.querySelectorAll("#cart-list").forEach((listEl) => {
   //listen for clicks on the list
   listEl.addEventListener("click", (e) => {
-    // if ((e.target as HTMLButtonElement).tagName === "BUTTON") {
-    //   console.log("you want to remove item!");
-
     if ((e.target as HTMLElement).closest(".remove-item")) {
-      //decrease totalAmount when item is removed
-      // totalAmount--;
-      // render update totalAmount to DOM(cart symbol)
-      // totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
-      // console.log("total amount is: ", totalAmount);
-      // console.log("you want to remove item!");
-
       // get the data-cart-id from the parent (LI) element
       const parentLiEl = (e.target as HTMLElement).parentElement;
-      console.log("parentLiEl is: ", parentLiEl);
+
       const clickedItemId = Number(parentLiEl?.dataset.cartId); // convert to a number
 
-      console.log("clicked item id is: ", clickedItemId);
       // search cart for the item with the title "clickedItem"
       const clickedItem = carts.find((item) => {
         return item.id === clickedItemId;
       });
-      console.log("clicked item is: ", clickedItem);
 
       carts = carts.filter((item) => item.id !== clickedItemId);
 
       addToCartRender();
       renderOrderSummary();
 
-      console.log("carts when deleting: ", carts);
-
       if (carts.length < 1) {
         cartDefaultEl.classList.remove("hide");
-        // goToCheckout.classList.add("hide");
         totalCostEl.innerHTML = "0 kr";
       }
 

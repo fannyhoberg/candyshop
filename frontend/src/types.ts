@@ -31,10 +31,10 @@ export interface NewOrder {
 }
 
 export interface OrderItem {
-  product_id: CartItem["id"],
-  qty: CartItem["quantity"],
-  item_price: CartItem["price"],
-  item_total: CartItem["total"],
+  product_id: CartItem["id"];
+  qty: CartItem["quantity"];
+  item_price: CartItem["price"];
+  item_total: CartItem["total"];
 }
 
 export interface OrderDataObject {
@@ -70,8 +70,7 @@ export interface CartItem {
 }
 
 export interface SummaryItem {
-  name: string,
-  price: number,
-  quantity: string,
-  // total: number,
+  name: string;
+  price: number;
+  quantity: string;
 }
