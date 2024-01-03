@@ -5,6 +5,7 @@ import { goToCheckout, cartDefaultEl, carts } from "./main";
 import { SummaryItem } from "./types";
 
 const summaryUl = document.querySelector<HTMLUListElement>('#checkout-order-list');
+const checkoutTotal = document.querySelector<HTMLParagraphElement>('#checkout-total')
 
 // Close checkout funciton
 export const closeCheckout = () => {
@@ -45,6 +46,12 @@ export const renderOrderSummary = () => {
 
     if (summaryUl) {
 
+        // const summaryTotal: number = cartSummary.reduce((total, item) => {
+        //     return total + (Number(item.price) * Number(item.quantity));
+        // }, 0);
+
+        // checkoutTotal!.innerText = `Totalt: ${summaryTotal} kronor`;
+
         summaryUl.innerHTML = cartSummary.map((item) =>
             `<li class="checkout-list-element">
         <p>${item.name}</p>
@@ -52,6 +59,8 @@ export const renderOrderSummary = () => {
         </li>`
         )
             .join("");
+
+
     }
 
     // cartSummary.forEach((item) => {

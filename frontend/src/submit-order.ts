@@ -72,6 +72,12 @@ export const localStorageConvert = (localStorageArray: string): OrderItem[] => {
 export let convertedOrderToSubmit = localStorageConvert("carts");
 console.log("this is the order after converting", convertedOrderToSubmit)
 
+// const totalOrderPriceCalc = (array: [], qty, item_price) => {
+//     array.reduce((total, orderItem) => {
+//         return total + (Number(orderItem.qty) * orderItem.item_price);
+//     }, 0);
+// }
+
 // // Calculate total order cost
 // const totalOrderPrice: number = convertedOrderToSubmit.reduce((total, orderItem) => {
 //     return total + (Number(orderItem.qty) * orderItem.item_price);
@@ -105,6 +111,11 @@ checkoutForm?.addEventListener('submit', async (e) => {
         order_items: convertedOrderToSubmit,
     }
 
+    if (formPostcode!.value.length > 6) {
+        alert("Ditt postnummer får inte vara längre än 6 tecken");
+        return;
+    }
+
     console.log("Will submit new order to API:", newOrder);
 
     try {
@@ -121,7 +132,6 @@ checkoutForm?.addEventListener('submit', async (e) => {
                 totalClicksEl.innerHTML = `<p></p>`;
             }
 
-
             const totalAmountjson = JSON.stringify(totalAmount);
             localStorage.setItem("totalAmount", totalAmountjson);
 
@@ -132,7 +142,7 @@ checkoutForm?.addEventListener('submit', async (e) => {
         }
 
     } catch (err) {
-        alert("Could not submit order! Please check the server.");
+        alert("Servern kunde inte nås! Försök igen om en stund.");
     }
 
     // try {
