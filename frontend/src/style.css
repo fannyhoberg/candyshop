@@ -339,6 +339,7 @@ input[type=submit] {
   background-color: #FFF;
   border: 1px solid #FEC3FF;
   padding: 20px 20px 40px 20px;
+  overflow: scroll;
 }
 
 .product-info-container img {
