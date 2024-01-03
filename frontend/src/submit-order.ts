@@ -1,4 +1,5 @@
 import { submitOrder } from "./api";
+import { totalClicksEl } from "./main";
 import { NewOrder, OrderData } from "./types";
 import { CartItem, OrderItem } from "./types";
 // import { getItemsFromLocalStorage } from "./main";
@@ -114,7 +115,16 @@ checkoutForm?.addEventListener('submit', async (e) => {
         if (response && response.status === "success") {
             renderSuccessMessage(response.data);
             localStorage.removeItem("carts");
-            localStorage.removeItem("totalAmount");
+            let totalAmount = 0;
+
+            if (totalAmount === 0) {
+                totalClicksEl.innerHTML = `<p></p>`;
+            }
+
+
+            const totalAmountjson = JSON.stringify(totalAmount);
+            localStorage.setItem("totalAmount", totalAmountjson);
+
             resetForm();
 
         } else if (response && response.status === "fail") {

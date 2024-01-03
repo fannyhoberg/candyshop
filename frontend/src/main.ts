@@ -223,9 +223,9 @@ closePopup(productInfoContainer, productInfoWrap);
 
 // FANNYS KOD NEDAN
 
-let totalAmount = 0;
+export let totalAmount = 0;
 
-const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
+export const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
 
 // empty cart array
 export let carts: CartItem[] = [];
@@ -289,6 +289,7 @@ const addToCartRender = () => {
 
   if (carts.length > 0) {
     cartEl.classList.remove("hide");
+    goToCheckout.classList.remove("hide");
 
     if (cartDefaultEl.classList.contains("empty-cart")) {
       cartDefaultEl.classList.add("hide");
@@ -360,8 +361,9 @@ const openCart = () => {
       cartWrapperEl.classList.remove("hide");
     }
 
-    if (carts.length < 1) {
+    if (totalAmount === 0) {
       cartEl.classList.add("hide");
+      console.log("Total amount är 0")
     }
   });
 };
