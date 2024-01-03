@@ -30,6 +30,7 @@ const largeImage = document.querySelector<HTMLImageElement>(
 const candyStock = document.querySelector<HTMLElement>("#candy-popup-stock")!;
 let candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
 console.log("checking candy name and it is candyName is: ", candyName);
+const candyPrice = document.querySelector<HTMLElement>("#candy-popup-price")!;
 const candyDescription =
   document.querySelector<HTMLParagraphElement>("#candy-description")!;
 const productInfoContainer = document.querySelector<HTMLElement>(
@@ -145,6 +146,7 @@ const handleProductClick = (e: MouseEvent) => {
         productArray,
         productInfoWrap,
         candyName,
+        candyPrice,
         candyDescription,
         candyStock,
         largeImage
