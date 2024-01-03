@@ -2,11 +2,14 @@ import "./submit-order";
 import { checkOutPage, checkoutForm, checkoutHeading, responseMessageDiv, checkoutSummaryDiv } from "./submit-order";
 import { getItemsFromLocalStorage, cartWrapperEl } from "./main";
 import { goToCheckout, cartDefaultEl, carts } from "./main";
+import { SummaryItem } from "./types";
+
+const summaryUl = document.querySelector<HTMLUListElement>('#checkout-order-list');
 
 // Close checkout funciton
 export const closeCheckout = () => {
     checkOutPage?.addEventListener("click", (e: MouseEvent) => {
-        const target = e.target as HTMLFormElement;
+        const target = e.target as HTMLElement;
 
         if (target.id === "close-checkout") {
             console.log("You want to close the checkout!")
@@ -31,10 +34,39 @@ export const closeCheckout = () => {
     });
 };
 
-// console.log("Back to homepage triggered");
-// const clickedButton = e.target as HTMLButtonElement;
+export const renderOrderSummary = () => {
+    // Get localStorage cart information
+    const savedCarts: SummaryItem[] = JSON.parse(
+        localStorage.getItem("carts") || "[]"
+    );
 
-// // Check if the clicked element is the product card image
-// if (clickedButton.id === "close-checkout") {
-//     checkoutForm?.classList.add("hide");
-// };
+    // Assign to a variable
+    let cartSummary = savedCarts;
+
+    if (summaryUl) {
+
+        summaryUl.innerHTML = cartSummary.map((item) =>
+            `<li class="checkout-list-element">
+        <p>${item.name}</p>
+        <p>Item Total: ${Number(item.price) * Number(item.quantity)} kronor</p>
+        </li>`
+        )
+            .join("");
+    }
+
+    // cartSummary.forEach((item) => {
+    //     let newItem = document.createElement("li");
+    //     let itemPrice = item.price * Number(item.quantity);
+
+    //     newItem.classList.add("checkout-list-element");
+
+    //     newItem.innerHTML = `
+    //     <p>${item.name}</p>
+    //     <p>${itemPrice}</p>
+    //     `
+
+    //     summaryUl?.appendChild(newItem);
+
+    // });
+
+};

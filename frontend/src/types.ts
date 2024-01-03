@@ -69,13 +69,9 @@ export interface CartItem {
   quantity: string;
 }
 
-
-/* export interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  images: string;
-  quantity: number;
-  // stock_quantity: number;
+export interface SummaryItem {
+  name: string,
+  price: number,
+  quantity: string,
+  // total: number,
 }
-*/

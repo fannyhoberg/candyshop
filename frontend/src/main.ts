@@ -2,6 +2,7 @@ import { fetchProducts } from "./api";
 import { Product, ProductObject, CartItem } from "./types";
 import { displayProductPopup, closePopup } from "./product-info-popup";
 import { closeCheckout } from "./checkout";
+import { renderOrderSummary } from "./checkout";
 import "./submit-order";
 import "./style.css";
 // import { localStorageConvert, convertedOrderToSubmit } from "./submit-order";
@@ -278,6 +279,7 @@ const addToCart = (
   }
   //call function to render to cart
   addToCartRender();
+  renderOrderSummary();
   console.log("detta är carts : ", carts);
 };
 
@@ -389,6 +391,7 @@ export const getItemsFromLocalStorage = () => {
   // render items from local storage
 
   addToCartRender();
+  renderOrderSummary();
 };
 
 // MATTEAS CODE FOR REMOVING CART ITEM
@@ -425,6 +428,7 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
       carts = carts.filter((item) => item.id !== clickedItemId);
 
       addToCartRender();
+      renderOrderSummary();
 
       console.log("carts when deleting: ", carts);
 

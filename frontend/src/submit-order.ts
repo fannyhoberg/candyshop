@@ -8,7 +8,6 @@ export const checkoutHeading = document.querySelector<HTMLHeadingElement>('#chec
 export const checkoutForm = document.querySelector<HTMLFormElement>('#checkout-form');
 export const responseMessageDiv = document.querySelector<HTMLDivElement>('#response-message');
 export const checkoutSummaryDiv = document.querySelector<HTMLDivElement>('#checkout-order-container');
-// const formInputFields = document.querySelectorAll<HTMLInputElement>('input.form-input');
 const formFirstName = document.querySelector<HTMLInputElement>('#first-name');
 const formLastName = document.querySelector<HTMLInputElement>('#last-name');
 const formAddress = document.querySelector<HTMLInputElement>('#address');
@@ -16,6 +15,16 @@ const formPostcode = document.querySelector<HTMLInputElement>('#zipcode');
 const formCity = document.querySelector<HTMLInputElement>('#city');
 const formPhone = document.querySelector<HTMLInputElement>('#phone');
 const formEmail = document.querySelector<HTMLInputElement>('#email');
+
+let orderToSubmit: CartItem[] = [];
+
+const resetForm = () => {
+    const inputFields = checkoutForm?.querySelectorAll('input');
+
+    inputFields?.forEach((field) => {
+        field.value = "";
+    })
+}
 
 const renderSuccessMessage = (orderData: OrderData) => {
     checkoutHeading!.innerText = "Tack för din beställning!";
@@ -38,8 +47,6 @@ const renderErrorMessage = () => {
        <p>Försök igen senare.</p>
     `
 }
-
-let orderToSubmit: CartItem[] = [];
 
 
 // Function to transform a cart item into an order item
@@ -107,6 +114,8 @@ checkoutForm?.addEventListener('submit', async (e) => {
         if (response && response.status === "success") {
             renderSuccessMessage(response.data);
             localStorage.removeItem("carts");
+            resetForm();
+
         } else if (response && response.status === "fail") {
             renderErrorMessage();
         }
