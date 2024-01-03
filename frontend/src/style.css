@@ -75,6 +75,18 @@ button:disabled {
   cursor: pointer;
 }
 
+.secondary-button {
+  border: 0px;
+  border-radius: 0;
+  background-color: none;
+  width: auto;
+  margin-bottom: 20px;
+}
+
+.secondary-button:hover {
+  text-decoration: underline;
+}
+
 img {
   width: 100%;
 }
@@ -278,6 +290,10 @@ form input {
 input[type=submit] {
   background-color: #FEC3FF;
   font-size: 16px;
+}
+
+#response-message {
+  padding: 10px;
 }
 
 

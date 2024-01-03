@@ -108,7 +108,22 @@
 
   <!-- CHECKOUT SECTION -->
   <div id="checkout-container" class="hide">
-    <h2>KASSA</h2>
+    <button class="button secondary-button" id="close-checkout">&larr; Fortsätt handla</button>
+    <h2 id="checkout-heading">KASSA</h2>
+    <div id="response-message" class="hide"></div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="section">
+      <div id="checkout-order-container">
+
+        <ul id="checkout-order-list">
+          <li class="checkout-list-element">
+
+          </li>
+
+        </ul>
+      </div>
+    </div>
 
     <!-- ORDER FORM -->
     <form name="checkout" method="post" id="checkout-form">

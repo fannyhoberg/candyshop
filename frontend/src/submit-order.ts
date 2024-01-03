@@ -1,10 +1,12 @@
-import { fetchOrders, submitOrder } from "./api";
+import { submitOrder } from "./api";
 import { NewOrder, OrderData } from "./types";
 import { CartItem, OrderItem } from "./types";
 // import { getItemsFromLocalStorage } from "./main";
 
-const checkOutPage = document.querySelector<HTMLElement>('#checkout-container');
+export const checkOutPage = document.querySelector<HTMLElement>('#checkout-container');
+export const checkoutHeading = document.querySelector<HTMLHeadingElement>('#checkout-heading');
 export const checkoutForm = document.querySelector<HTMLFormElement>('#checkout-form');
+export const responseMessageDiv = document.querySelector<HTMLDivElement>('#response-message');
 // const formInputFields = document.querySelectorAll<HTMLInputElement>('input.form-input');
 const formFirstName = document.querySelector<HTMLInputElement>('#first-name');
 const formLastName = document.querySelector<HTMLInputElement>('#last-name');
@@ -15,25 +17,16 @@ const formPhone = document.querySelector<HTMLInputElement>('#phone');
 const formEmail = document.querySelector<HTMLInputElement>('#email');
 
 const renderSuccessMessage = (orderData: OrderData) => {
-    checkOutPage!.innerHTML = `
-    <div id="submit-response">
-      <h2>Tack för din beställning!</h2>
-      <p>Ditt ordernummer är ${orderData.id}</p>
-    </div>`
+    checkoutHeading!.innerText = "Tack för din beställning!";
+    checkoutForm?.classList.add("hide");
+    responseMessageDiv?.classList.remove("hide");
+
+    responseMessageDiv!.innerHTML = `
+       <p>Ditt ordernummer är #${orderData.id}</p>
+    `
 };
 
 let orderToSubmit: CartItem[] = [];
-
-// const totalOrderPrice: number = orderToSubmit.reduce((total, orderItem) => {
-//     return total + (Number(orderItem.qty) * orderItem.item_price);
-// }, 0);
-
-// orderToSubmit.forEach((item) => {
-//     console.log(item.qty);
-// })
-
-// console.log("This is the order to submit:", orderToSubmit);
-// console.log("This is the total order price:", totalOrderPrice);
 
 
 // Function to transform a cart item into an order item
@@ -57,15 +50,15 @@ export const localStorageConvert = (localStorageArray: string): OrderItem[] => {
     return convertOrderToTemplate;
 };
 
-const convertedOrderToSubmit = localStorageConvert("carts");
-console.log(convertedOrderToSubmit)
+export let convertedOrderToSubmit = localStorageConvert("carts");
+console.log("this is the order after converting", convertedOrderToSubmit)
 
 // Calculate total order cost
 const totalOrderPrice: number = convertedOrderToSubmit.reduce((total, orderItem) => {
     return total + (Number(orderItem.qty) * orderItem.item_price);
 }, 0);
 
-console.log(totalOrderPrice);
+console.log("This is the total order price:", totalOrderPrice);
 
 checkoutForm?.addEventListener('submit', async (e) => {
 
@@ -86,20 +79,42 @@ checkoutForm?.addEventListener('submit', async (e) => {
     console.log("Will submit new order to API:", newOrder);
 
     try {
-        // POST todo to the API
+        // Call makeApiCall instead of submitOrder
         const response = await submitOrder(newOrder);
         console.log("submitted!", response);
 
-        const orderData = response.data;
-
-        console.log("This is your order data: ", orderData.id);
-
-        let orders = await fetchOrders();
-        console.log("These are all orders", orders);
-
-        renderSuccessMessage(orderData);
+        if (response && response.status === "success") {
+            renderSuccessMessage(response.data);
+            localStorage.removeItem("carts");
+        }
 
     } catch (err) {
-        alert("Could not submit order! Please check the server.")
+        alert("Could not submit order! Please check the server.");
     }
+
+    // try {
+    //     // POST todo to the API
+    //     const response = await submitOrder(newOrder);
+    //     console.log("submitted!", response);
+
+    //     const orderData = response.data;
+
+    //     console.log("This is your order data: ", orderData.id);
+
+    //     console.log(response.status);
+
+    //     if (response.status = "success") {
+    //         renderSuccessMessage(orderData);
+    //         localStorage.removeItem("carts");
+    //     }
+
+    //     // let orders = await fetchOrders();
+    //     // console.log("These are all orders", orders);
+
+
+
+
+    // } catch (err) {
+    //     alert("Could not submit order! Please check the server.")
+    // }
 });

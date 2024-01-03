@@ -1,8 +1,10 @@
 import { fetchProducts } from "./api";
 import { Product, ProductObject, CartItem } from "./types";
 import { displayProductPopup, closePopup } from "./product-info-popup";
+import { closeCheckout } from "./checkout";
 import "./submit-order";
 import "./style.css";
+// import { localStorageConvert, convertedOrderToSubmit } from "./submit-order";
 
 const container = document.querySelector<HTMLElement>("#product-container")!;
 const productOverviewCount =
@@ -11,9 +13,9 @@ const productOverviewInstock =
   document.querySelector<HTMLSpanElement>("#products-instock")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 // reference to cart total wrap
-const goToCheckout = document.querySelector<HTMLElement>("#cart-total-wrap")!;
+export const goToCheckout = document.querySelector<HTMLElement>("#cart-total-wrap")!;
 // reference to cart default
-const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
+export const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
 
 // declare variables for info popup
 
@@ -464,4 +466,6 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 
 // END OF DELETING ITEMS CODE
 getItemsFromLocalStorage();
+
+closeCheckout();
 
