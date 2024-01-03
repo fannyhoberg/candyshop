@@ -48,7 +48,7 @@ export const renderOrderSummary = () => {
         summaryUl.innerHTML = cartSummary.map((item) =>
             `<li class="checkout-list-element">
         <p>${item.name}</p>
-        <p>Item Total: ${Number(item.price) * Number(item.quantity)} kronor</p>
+        <p>${Number(item.price) * Number(item.quantity)} kronor</p>
         </li>`
         )
             .join("");
