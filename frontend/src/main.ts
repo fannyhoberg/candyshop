@@ -355,6 +355,10 @@ const openCart = () => {
     if (target.classList.contains("fa-cart-shopping")) {
       cartWrapperEl.classList.remove("hide");
     }
+
+    if (carts.length < 1) {
+      cartEl.classList.add("hide");
+    }
   });
 };
 
@@ -440,7 +444,8 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 
       if (carts.length < 1) {
         cartDefaultEl.classList.remove("hide");
-        goToCheckout.classList.add("hide");
+        // goToCheckout.classList.add("hide");
+        totalCostEl.innerHTML = "0 kr";
       }
 
       //decrease totalAmount when item is removed
@@ -452,6 +457,7 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 
       if (totalAmount === 0) {
         totalClicksEl.innerHTML = `<p></p>`;
+        cartEl.classList.add("hide");
       } else {
         totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
       }
