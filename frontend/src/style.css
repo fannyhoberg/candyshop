@@ -78,7 +78,7 @@ button:disabled {
 .secondary-button {
   border: 0px;
   border-radius: 0;
-  background-color: none;
+  background-color: transparent;
   width: auto;
   margin-bottom: 20px;
 }
