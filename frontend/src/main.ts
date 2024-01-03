@@ -14,9 +14,11 @@ const productOverviewInstock =
   document.querySelector<HTMLSpanElement>("#products-instock")!;
 //const productCard = document.querySelector<HTMLDivElement>(".product-card")!;
 // reference to cart total wrap
-export const goToCheckout = document.querySelector<HTMLElement>("#cart-total-wrap")!;
+export const goToCheckout =
+  document.querySelector<HTMLElement>("#cart-total-wrap")!;
 // reference to cart default
-export const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
+export const cartDefaultEl =
+  document.querySelector<HTMLElement>("#cart-default")!;
 
 // declare variables for handleProductClick function
 
@@ -25,6 +27,7 @@ const productInfoWrap =
 const largeImage = document.querySelector<HTMLImageElement>(
   ".product-image-large"
 )!;
+const candyStock = document.querySelector<HTMLElement>("#candy-popup-stock")!;
 let candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
 console.log("checking candy name and it is candyName is: ", candyName);
 const candyDescription =
@@ -143,6 +146,7 @@ const handleProductClick = (e: MouseEvent) => {
         productInfoWrap,
         candyName,
         candyDescription,
+        candyStock,
         largeImage
       );
     }
@@ -161,8 +165,6 @@ const handleProductClick = (e: MouseEvent) => {
     );
 
     let candyPriceEl = document.querySelector<HTMLElement>("#candy-price")!;
-    let candyStockQuantityEl =
-      document.querySelector<HTMLElement>("#stock-quantity")!;
 
     let candyNameToCart: string = "";
     let candyPriceToCart: string = "";
@@ -174,10 +176,8 @@ const handleProductClick = (e: MouseEvent) => {
     if (clickedProduct) {
       candyName.innerHTML = clickedProduct.name;
       candyNameToCart = candyName.innerHTML;
-      candyPriceEl.innerHTML = clickedProduct.price.toString();
-      candyPriceToCart = candyPriceEl.innerHTML;
-      candyStockQuantityEl.innerHTML = clickedProduct.stock_quantity.toString();
-      candyStockQuantity = candyStockQuantityEl.innerHTML;
+      candyPriceToCart = clickedProduct.price.toString();
+      candyStockQuantity = clickedProduct.stock_quantity.toString();
       candyImageSrc.thumbnail = `https://www.bortakvall.se${clickedProduct.images.thumbnail}`;
     }
 
@@ -196,8 +196,6 @@ const handleProductClick = (e: MouseEvent) => {
         Number(candyPriceToCart),
         Number(candyPriceTotal)
       );
-    } else {
-      alert("Denna produkt saknas i lager!");
     }
     // count for clicks and display next to cart
 
@@ -225,7 +223,8 @@ closePopup(productInfoContainer, productInfoWrap);
 
 export let totalAmount = 0;
 
-export const totalClicksEl = document.querySelector<HTMLElement>(".totalClicks")!;
+export const totalClicksEl =
+  document.querySelector<HTMLElement>(".totalClicks")!;
 
 // empty cart array
 export let carts: CartItem[] = [];
@@ -348,7 +347,8 @@ const addToCartRender = () => {
   localStorage.setItem("carts", json);
 };
 
-export const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
+export const cartWrapperEl =
+  document.querySelector<HTMLElement>("#cart-wrapper")!;
 
 const openCartEl = document.querySelector<HTMLElement>("#open-cart")!;
 
@@ -363,7 +363,7 @@ const openCart = () => {
 
     if (totalAmount === 0) {
       cartEl.classList.add("hide");
-      console.log("Total amount är 0")
+      console.log("Total amount är 0");
     }
   });
 };
@@ -477,4 +477,3 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 getItemsFromLocalStorage();
 
 closeCheckout();
-

@@ -8,6 +8,7 @@ const displayProductPopup = (
   productInfoWrap: HTMLElement,
   candyName: HTMLHeadingElement,
   candyDescription: HTMLParagraphElement,
+  candyStock: HTMLElement,
   largeImage: HTMLImageElement
 ) => {
   console.log("Display Product Popup triggered");
@@ -22,10 +23,15 @@ const displayProductPopup = (
     productInfoWrap.classList.remove("hide");
     candyName.innerHTML = `Produktnamn: ${clickedProduct.name}`;
     candyDescription.innerHTML = `Innehåll: ${clickedProduct.description}`;
+    candyStock.innerHTML = `Lagerstatus: ${clickedProduct.stock_quantity}`;
     largeImage.src = `https://www.bortakvall.se${clickedProduct.images.large}`;
     largeImage.alt = `Large image of ${clickedProduct.name}`;
 
     console.log("product-id: ", clickedProduct.id);
+
+    if (clickedProduct.stock_quantity === null) {
+      candyStock.innerHTML = `Lagerstatus: 0`;
+    }
   }
 };
 
