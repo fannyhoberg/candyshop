@@ -114,6 +114,7 @@ checkoutForm?.addEventListener('submit', async (e) => {
         if (response && response.status === "success") {
             renderSuccessMessage(response.data);
             localStorage.removeItem("carts");
+            localStorage.removeItem("totalAmount");
             resetForm();
 
         } else if (response && response.status === "fail") {
