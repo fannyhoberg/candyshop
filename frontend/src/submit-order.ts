@@ -22,8 +22,10 @@ let orderToSubmit: CartItem[] = [];
 const resetForm = () => {
     const inputFields = checkoutForm?.querySelectorAll('input');
 
+
     inputFields?.forEach((field) => {
-        field.value = "";
+        if (field.type !== "submit")
+            field.value = "";
     })
 }
 

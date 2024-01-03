@@ -46,11 +46,12 @@ export const renderOrderSummary = () => {
 
     if (summaryUl) {
 
-        // const summaryTotal: number = cartSummary.reduce((total, item) => {
-        //     return total + (Number(item.price) * Number(item.quantity));
-        // }, 0);
+        const summaryTotal: number = cartSummary.reduce((total, item) => {
+            return total + (Number(item.price) * Number(item.quantity));
+        }, 0);
 
-        // checkoutTotal!.innerText = `Totalt: ${summaryTotal} kronor`;
+        console.log(summaryTotal);
+        checkoutTotal!.innerText = `Totalt: ${summaryTotal} kronor`;
 
         summaryUl.innerHTML = cartSummary.map((item) =>
             `<li class="checkout-list-element">
@@ -62,20 +63,5 @@ export const renderOrderSummary = () => {
 
 
     }
-
-    // cartSummary.forEach((item) => {
-    //     let newItem = document.createElement("li");
-    //     let itemPrice = item.price * Number(item.quantity);
-
-    //     newItem.classList.add("checkout-list-element");
-
-    //     newItem.innerHTML = `
-    //     <p>${item.name}</p>
-    //     <p>${itemPrice}</p>
-    //     `
-
-    //     summaryUl?.appendChild(newItem);
-
-    // });
 
 };
