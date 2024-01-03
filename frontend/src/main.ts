@@ -209,6 +209,10 @@ const handleProductClick = (e: MouseEvent) => {
     if (totalAmount > 0 && Number(candyStockQuantity) > 0) {
       totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
     }
+
+    // setItem totalAmount to localStorage
+    const totalAmountjson = JSON.stringify(totalAmount);
+    localStorage.setItem("totalAmount", totalAmountjson);
   }
 };
 
@@ -217,7 +221,7 @@ closePopup(productInfoContainer, productInfoWrap);
 
 // get items from local storage when page reloads
 
-localStorage.getItem("carts") ?? "";
+// localStorage.getItem("carts") ?? "";
 
 // FANNYS KOD NEDAN
 
@@ -382,11 +386,24 @@ export const getItemsFromLocalStorage = () => {
     localStorage.getItem("carts") || "[]"
   );
 
+  // Get totalAmount from local storage
+  const savedTotalAmount = JSON.parse(
+    localStorage.getItem("totalAmount") || "0"
+  );
+
   // update cart with data
   carts = savedCarts;
-  // render items from local storage
 
+  // Update totalAmount with data
+  totalAmount = savedTotalAmount;
+
+  // render items from local storage
   addToCartRender();
+
+  // Update totalClicksEl based on totalAmount when page reload
+  if (totalAmount > 0) {
+    totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
+  }
 };
 
 // MATTEAS CODE FOR REMOVING CART ITEM
@@ -402,11 +419,11 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 
     if ((e.target as HTMLElement).closest(".remove-item")) {
       //decrease totalAmount when item is removed
-      totalAmount--;
+      // totalAmount--;
       // render update totalAmount to DOM(cart symbol)
-      totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
-      console.log("total amount is: ", totalAmount);
-      console.log("you want to remove item!");
+      // totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
+      // console.log("total amount is: ", totalAmount);
+      // console.log("you want to remove item!");
 
       // get the data-cart-id from the parent (LI) element
       const parentLiEl = (e.target as HTMLElement).parentElement;
@@ -429,6 +446,19 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
       if (carts.length < 1) {
         cartDefaultEl.classList.remove("hide");
         goToCheckout.classList.add("hide");
+      }
+
+      //decrease totalAmount when item is removed
+      totalAmount -= Number(clickedItem?.quantity);
+
+      // Update totalAmount in local storage
+      const totalAmountjson = JSON.stringify(totalAmount);
+      localStorage.setItem("totalAmount", totalAmountjson);
+
+      if (totalAmount === 0) {
+        totalClicksEl.innerHTML = `<p></p>`;
+      } else {
+        totalClicksEl.innerHTML = `<p>${totalAmount}</p>`;
       }
     }
   });
