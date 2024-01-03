@@ -120,14 +120,16 @@ const renderProducts = (array: Product[]) => {
 
 const handleProductClick = (e: MouseEvent) => {
   console.log("Handle Product Click triggered");
-  const clickedElement = e.target as HTMLElement;
+  let clickedElement = e.target as HTMLElement;
+  // When someething is clicked, Retrieve the product ID from the data attribute
+  // keep in scope of entire function for re-usability
+
+  // Retrieve the product ID from the data attribute
+  let productId = (clickedElement.closest(".product-card") as HTMLElement)
+    ?.dataset.productId;
 
   // Check if the clicked element is the product card image
   if (clickedElement.classList.contains("product-image-thumbnail")) {
-    // Retrieve the product ID from the data attribute
-    const productId = (clickedElement.closest(".product-card") as HTMLElement)
-      ?.dataset.productId;
-
     // Call a function to display a pop-up or perform any other action
     // only run if productId is not undefined
 
@@ -148,20 +150,15 @@ const handleProductClick = (e: MouseEvent) => {
   // check if click was on button
   if (target.tagName === "BUTTON") {
     console.log("Du klickade på knappen", e);
-
-    // get and store product-id
-    let product_id = Number(target.dataset.id);
-    console.log("Detta är product_id", product_id);
-
+    console.log("knappen har id: ", productId);
     // get reference for closest product card
-    const parentProductEl = target.closest(".product-card") as HTMLElement;
-    console.log("Detta är parentProductEl; ", parentProductEl);
+    clickedElement = target.closest(".product-card") as HTMLElement;
 
     // get reference for clicked candy name
     let candyNameToCart: string = "";
 
-    if (parentProductEl) {
-      const candyNameElement = parentProductEl.querySelector(
+    if (clickedElement) {
+      const candyNameElement = clickedElement.querySelector(
         "#candy-name"
       ) as HTMLHeadingElement;
 
@@ -176,8 +173,8 @@ const handleProductClick = (e: MouseEvent) => {
     let candyImageSrc: {
       thumbnail: string;
     } = { thumbnail: "" };
-    if (parentProductEl) {
-      const candyImageElement = parentProductEl.querySelector(
+    if (clickedElement) {
+      const candyImageElement = clickedElement.querySelector(
         "#candy-image"
       ) as HTMLImageElement;
 
@@ -191,8 +188,8 @@ const handleProductClick = (e: MouseEvent) => {
     // get reference for clicked candy price
     let candyPriceToCart: string = "";
 
-    if (parentProductEl) {
-      const candyPriceElement = parentProductEl.querySelector(
+    if (clickedElement) {
+      const candyPriceElement = clickedElement.querySelector(
         "#candy-price"
       ) as HTMLElement;
 
@@ -206,8 +203,8 @@ const handleProductClick = (e: MouseEvent) => {
     // get reference for clicked candy stock quantity
     let candyStockQuantity: string = "";
 
-    if (parentProductEl) {
-      const candyStockQuantityEl = parentProductEl.querySelector(
+    if (clickedElement) {
+      const candyStockQuantityEl = clickedElement.querySelector(
         "#stock-quantity"
       ) as HTMLElement;
 
@@ -222,7 +219,7 @@ const handleProductClick = (e: MouseEvent) => {
     // call function addToCart with value of clicked candy
     if (Number(candyStockQuantity) > 0) {
       addToCart(
-        product_id,
+        Number(productId),
         candyNameToCart,
         candyImageSrc,
         Number(candyPriceToCart),
