@@ -15,14 +15,15 @@ const goToCheckout = document.querySelector<HTMLElement>("#cart-total-wrap")!;
 // reference to cart default
 const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
 
-// declare variables for info popup
+// declare variables for handleProductClick function
 
 const productInfoWrap =
   document.querySelector<HTMLElement>(".product-info-wrap")!;
 const largeImage = document.querySelector<HTMLImageElement>(
   ".product-image-large"
 )!;
-const candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
+let candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
+console.log("checking candy name and it is candyName is: ", candyName);
 const candyDescription =
   document.querySelector<HTMLParagraphElement>("#candy-description")!;
 const productInfoContainer = document.querySelector<HTMLElement>(
@@ -123,8 +124,9 @@ const handleProductClick = (e: MouseEvent) => {
   // keep in scope of entire function for re-usability
 
   // Retrieve the product ID from the data attribute
-  let productId = (clickedElement.closest(".product-card") as HTMLElement)
-    ?.dataset.productId;
+  let productId =
+    (clickedElement.closest(".product-card") as HTMLElement)?.dataset
+      .productId ?? ""; // handle if productId is undefined
 
   // Check if the clicked element is the product card image
   if (clickedElement.classList.contains("product-image-thumbnail")) {
@@ -150,68 +152,41 @@ const handleProductClick = (e: MouseEvent) => {
     console.log("Du klickade på knappen", e);
     console.log("knappen har id: ", productId);
     // get reference for closest product card
+
+    // changed clickedElement to let and replaced parentProductEl with clickedElement!
+    // get reference for closest product card
     clickedElement = target.closest(".product-card") as HTMLElement;
 
-    // get reference for clicked candy name
+    // find the clicked product from array
+    const clickedProduct = productArray.find(
+      (product) => product.id === Number(productId)
+    );
+
+    let candyPriceEl = document.querySelector<HTMLElement>("#candy-price")!;
+    let candyStockQuantityEl =
+      document.querySelector<HTMLElement>("#stock-quantity")!;
+
     let candyNameToCart: string = "";
-
-    if (clickedElement) {
-      const candyNameElement = clickedElement.querySelector(
-        "#candy-name"
-      ) as HTMLHeadingElement;
-
-      // Check that candyNameElement is not null
-      if (candyNameElement) {
-        candyNameToCart = candyNameElement.textContent || "";
-      }
-    }
-    console.log("Detta är candyname:", candyNameToCart);
-
-    // get reference for clicked candy image source
+    let candyPriceToCart: string = "";
+    let candyStockQuantity: string = "";
     let candyImageSrc: {
       thumbnail: string;
     } = { thumbnail: "" };
-    if (clickedElement) {
-      const candyImageElement = clickedElement.querySelector(
-        "#candy-image"
-      ) as HTMLImageElement;
 
-      // Kontrollera att candyImageElement inte är null innan du fortsätter
-      if (candyImageElement) {
-        candyImageSrc.thumbnail = candyImageElement.getAttribute("src") || "";
-      }
+    if (clickedProduct) {
+      candyName.innerHTML = clickedProduct.name;
+      candyNameToCart = candyName.innerHTML;
+      candyPriceEl.innerHTML = clickedProduct.price.toString();
+      candyPriceToCart = candyPriceEl.innerHTML;
+      candyStockQuantityEl.innerHTML = clickedProduct.stock_quantity.toString();
+      candyStockQuantity = candyStockQuantityEl.innerHTML;
+      candyImageSrc.thumbnail = `https://www.bortakvall.se${clickedProduct.images.thumbnail}`;
     }
-    console.log("Detta är candyImageSrc:", candyImageSrc);
 
-    // get reference for clicked candy price
-    let candyPriceToCart: string = "";
-
-    if (clickedElement) {
-      const candyPriceElement = clickedElement.querySelector(
-        "#candy-price"
-      ) as HTMLElement;
-
-      // Check that candyNameElement is not null
-      if (candyPriceElement) {
-        candyPriceToCart = candyPriceElement.textContent || "";
-      }
-    }
-    console.log("Detta är candyPriceToCart:", candyPriceToCart);
-
-    // get reference for clicked candy stock quantity
-    let candyStockQuantity: string = "";
-
-    if (clickedElement) {
-      const candyStockQuantityEl = clickedElement.querySelector(
-        "#stock-quantity"
-      ) as HTMLElement;
-
-      // Check that candyNameElement is not null
-      if (candyStockQuantityEl) {
-        candyStockQuantity = candyStockQuantityEl.textContent || "";
-      }
-    }
+    console.log("detta är candyName: ", candyName.innerHTML);
+    console.log("Detta är candyPriceToCart:", candyPriceEl.innerHTML);
     console.log("Detta är candyStockQuantity:", candyStockQuantity);
+    console.log("Detta är candyImageSrc:", candyImageSrc);
 
     let candyPriceTotal = Number(candyPriceToCart);
     // call function addToCart with value of clicked candy
@@ -461,4 +436,3 @@ document.querySelectorAll("#cart-list").forEach((listEl) => {
 
 // END OF DELETING ITEMS CODE
 getItemsFromLocalStorage();
-
