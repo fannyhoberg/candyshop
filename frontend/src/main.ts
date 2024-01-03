@@ -374,7 +374,7 @@ const addToCartRender = () => {
   localStorage.setItem("carts", json);
 };
 
-const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
+export const cartWrapperEl = document.querySelector<HTMLElement>("#cart-wrapper")!;
 
 const openCartEl = document.querySelector<HTMLElement>("#open-cart")!;
 

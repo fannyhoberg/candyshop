@@ -1,6 +1,6 @@
 import "./submit-order";
-import { checkOutPage, checkoutForm, checkoutHeading, responseMessageDiv } from "./submit-order";
-import { getItemsFromLocalStorage } from "./main";
+import { checkOutPage, checkoutForm, checkoutHeading, responseMessageDiv, checkoutSummaryDiv } from "./submit-order";
+import { getItemsFromLocalStorage, cartWrapperEl } from "./main";
 import { goToCheckout, cartDefaultEl, carts } from "./main";
 
 // Close checkout funciton
@@ -16,8 +16,11 @@ export const closeCheckout = () => {
                 checkoutHeading!.innerText = "KASSA";
                 checkoutForm.classList.remove("hide");
                 responseMessageDiv?.classList.add("hide");
+                cartWrapperEl.classList.add("hide");
+                checkoutSummaryDiv?.classList.remove("hide");
 
                 getItemsFromLocalStorage();
+
 
                 if (carts.length < 1) {
                     cartDefaultEl.classList.remove("hide");

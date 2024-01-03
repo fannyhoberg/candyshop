@@ -7,6 +7,7 @@ export const checkOutPage = document.querySelector<HTMLElement>('#checkout-conta
 export const checkoutHeading = document.querySelector<HTMLHeadingElement>('#checkout-heading');
 export const checkoutForm = document.querySelector<HTMLFormElement>('#checkout-form');
 export const responseMessageDiv = document.querySelector<HTMLDivElement>('#response-message');
+export const checkoutSummaryDiv = document.querySelector<HTMLDivElement>('#checkout-order-container');
 // const formInputFields = document.querySelectorAll<HTMLInputElement>('input.form-input');
 const formFirstName = document.querySelector<HTMLInputElement>('#first-name');
 const formLastName = document.querySelector<HTMLInputElement>('#last-name');
@@ -20,11 +21,23 @@ const renderSuccessMessage = (orderData: OrderData) => {
     checkoutHeading!.innerText = "Tack för din beställning!";
     checkoutForm?.classList.add("hide");
     responseMessageDiv?.classList.remove("hide");
+    checkoutSummaryDiv?.classList.add("hide");
 
     responseMessageDiv!.innerHTML = `
        <p>Ditt ordernummer är #${orderData.id}</p>
     `
 };
+
+const renderErrorMessage = () => {
+    checkoutHeading!.innerText = "Något gick fel!";
+    checkoutForm?.classList.add("hide");
+    responseMessageDiv?.classList.remove("hide");
+    checkoutSummaryDiv?.classList.add("hide");
+
+    responseMessageDiv!.innerHTML = `
+       <p>Försök igen senare.</p>
+    `
+}
 
 let orderToSubmit: CartItem[] = [];
 
@@ -41,28 +54,36 @@ const transformOrderItem = (cartItem: CartItem): OrderItem => {
 
 // Retrieve localStorage and transform it to an array that matches the order template
 export const localStorageConvert = (localStorageArray: string): OrderItem[] => {
-
     orderToSubmit = JSON.parse(localStorage.getItem(localStorageArray) || "[]");
     console.log("this is the order before converting", orderToSubmit);
 
     const convertOrderToTemplate: OrderItem[] = orderToSubmit.map(transformOrderItem);
-
     return convertOrderToTemplate;
 };
 
 export let convertedOrderToSubmit = localStorageConvert("carts");
 console.log("this is the order after converting", convertedOrderToSubmit)
 
-// Calculate total order cost
-const totalOrderPrice: number = convertedOrderToSubmit.reduce((total, orderItem) => {
-    return total + (Number(orderItem.qty) * orderItem.item_price);
-}, 0);
+// // Calculate total order cost
+// const totalOrderPrice: number = convertedOrderToSubmit.reduce((total, orderItem) => {
+//     return total + (Number(orderItem.qty) * orderItem.item_price);
+// }, 0);
 
-console.log("This is the total order price:", totalOrderPrice);
+// console.log("This is the total order price:", totalOrderPrice);
 
 checkoutForm?.addEventListener('submit', async (e) => {
 
     e.preventDefault();
+
+    convertedOrderToSubmit = localStorageConvert("carts");
+    console.log("this is the order after converting", convertedOrderToSubmit)
+
+    // Calculate total order cost
+    const totalOrderPrice: number = convertedOrderToSubmit.reduce((total, orderItem) => {
+        return total + (Number(orderItem.qty) * orderItem.item_price);
+    }, 0);
+
+    console.log("This is the total order price:", totalOrderPrice);
 
     const newOrder: NewOrder = {
         customer_first_name: formFirstName?.value || "",
@@ -86,6 +107,8 @@ checkoutForm?.addEventListener('submit', async (e) => {
         if (response && response.status === "success") {
             renderSuccessMessage(response.data);
             localStorage.removeItem("carts");
+        } else if (response && response.status === "fail") {
+            renderErrorMessage();
         }
 
     } catch (err) {
