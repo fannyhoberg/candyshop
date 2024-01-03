@@ -17,14 +17,15 @@ export const goToCheckout = document.querySelector<HTMLElement>("#cart-total-wra
 // reference to cart default
 export const cartDefaultEl = document.querySelector<HTMLElement>("#cart-default")!;
 
-// declare variables for info popup
+// declare variables for handleProductClick function
 
 const productInfoWrap =
   document.querySelector<HTMLElement>(".product-info-wrap")!;
 const largeImage = document.querySelector<HTMLImageElement>(
   ".product-image-large"
 )!;
-const candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
+let candyName = document.querySelector<HTMLHeadingElement>("#candy-name")!;
+console.log("checking candy name and it is candyName is: ", candyName);
 const candyDescription =
   document.querySelector<HTMLParagraphElement>("#candy-description")!;
 const productInfoContainer = document.querySelector<HTMLElement>(
@@ -120,14 +121,17 @@ const renderProducts = (array: Product[]) => {
 
 const handleProductClick = (e: MouseEvent) => {
   console.log("Handle Product Click triggered");
-  const clickedElement = e.target as HTMLElement;
+  let clickedElement = e.target as HTMLElement;
+  // When someething is clicked, Retrieve the product ID from the data attribute
+  // keep in scope of entire function for re-usability
+
+  // Retrieve the product ID from the data attribute
+  let productId =
+    (clickedElement.closest(".product-card") as HTMLElement)?.dataset
+      .productId ?? ""; // handle if productId is undefined
 
   // Check if the clicked element is the product card image
   if (clickedElement.classList.contains("product-image-thumbnail")) {
-    // Retrieve the product ID from the data attribute
-    const productId = (clickedElement.closest(".product-card") as HTMLElement)
-      ?.dataset.productId;
-
     // Call a function to display a pop-up or perform any other action
     // only run if productId is not undefined
 
@@ -148,81 +152,49 @@ const handleProductClick = (e: MouseEvent) => {
   // check if click was on button
   if (target.tagName === "BUTTON") {
     console.log("Du klickade på knappen", e);
-
-    // get and store product-id
-    let product_id = Number(target.dataset.id);
-    console.log("Detta är product_id", product_id);
-
+    console.log("knappen har id: ", productId);
     // get reference for closest product card
-    const parentProductEl = target.closest(".product-card") as HTMLElement;
-    console.log("Detta är parentProductEl; ", parentProductEl);
 
-    // get reference for clicked candy name
+    // changed clickedElement to let and replaced parentProductEl with clickedElement!
+    // get reference for closest product card
+    clickedElement = target.closest(".product-card") as HTMLElement;
+
+    // find the clicked product from array
+    const clickedProduct = productArray.find(
+      (product) => product.id === Number(productId)
+    );
+
+    let candyPriceEl = document.querySelector<HTMLElement>("#candy-price")!;
+    let candyStockQuantityEl =
+      document.querySelector<HTMLElement>("#stock-quantity")!;
+
     let candyNameToCart: string = "";
-
-    if (parentProductEl) {
-      const candyNameElement = parentProductEl.querySelector(
-        "#candy-name"
-      ) as HTMLHeadingElement;
-
-      // Check that candyNameElement is not null
-      if (candyNameElement) {
-        candyNameToCart = candyNameElement.textContent || "";
-      }
-    }
-    console.log("Detta är candyname:", candyNameToCart);
-
-    // get reference for clicked candy image source
+    let candyPriceToCart: string = "";
+    let candyStockQuantity: string = "";
     let candyImageSrc: {
       thumbnail: string;
     } = { thumbnail: "" };
-    if (parentProductEl) {
-      const candyImageElement = parentProductEl.querySelector(
-        "#candy-image"
-      ) as HTMLImageElement;
 
-      // Kontrollera att candyImageElement inte är null innan du fortsätter
-      if (candyImageElement) {
-        candyImageSrc.thumbnail = candyImageElement.getAttribute("src") || "";
-      }
+    if (clickedProduct) {
+      candyName.innerHTML = clickedProduct.name;
+      candyNameToCart = candyName.innerHTML;
+      candyPriceEl.innerHTML = clickedProduct.price.toString();
+      candyPriceToCart = candyPriceEl.innerHTML;
+      candyStockQuantityEl.innerHTML = clickedProduct.stock_quantity.toString();
+      candyStockQuantity = candyStockQuantityEl.innerHTML;
+      candyImageSrc.thumbnail = `https://www.bortakvall.se${clickedProduct.images.thumbnail}`;
     }
-    console.log("Detta är candyImageSrc:", candyImageSrc);
 
-    // get reference for clicked candy price
-    let candyPriceToCart: string = "";
-
-    if (parentProductEl) {
-      const candyPriceElement = parentProductEl.querySelector(
-        "#candy-price"
-      ) as HTMLElement;
-
-      // Check that candyNameElement is not null
-      if (candyPriceElement) {
-        candyPriceToCart = candyPriceElement.textContent || "";
-      }
-    }
-    console.log("Detta är candyPriceToCart:", candyPriceToCart);
-
-    // get reference for clicked candy stock quantity
-    let candyStockQuantity: string = "";
-
-    if (parentProductEl) {
-      const candyStockQuantityEl = parentProductEl.querySelector(
-        "#stock-quantity"
-      ) as HTMLElement;
-
-      // Check that candyNameElement is not null
-      if (candyStockQuantityEl) {
-        candyStockQuantity = candyStockQuantityEl.textContent || "";
-      }
-    }
+    console.log("detta är candyName: ", candyName.innerHTML);
+    console.log("Detta är candyPriceToCart:", candyPriceEl.innerHTML);
     console.log("Detta är candyStockQuantity:", candyStockQuantity);
+    console.log("Detta är candyImageSrc:", candyImageSrc);
 
     let candyPriceTotal = Number(candyPriceToCart);
     // call function addToCart with value of clicked candy
     if (Number(candyStockQuantity) > 0) {
       addToCart(
-        product_id,
+        Number(productId),
         candyNameToCart,
         candyImageSrc,
         Number(candyPriceToCart),
